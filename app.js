@@ -9,6 +9,12 @@ const canvasType = document.querySelector("#canvasType");
 const canvasTitle = document.querySelector("#canvasTitle");
 const canvasDetails = document.querySelector("#canvasDetails");
 const canvasBadge = document.querySelector("#canvasBadge");
+const stepPanels = document.querySelectorAll(".step-panel");
+const stepDots = document.querySelectorAll("[data-step-target]");
+const nextButtons = document.querySelectorAll("[data-next-step]");
+const prevButtons = document.querySelectorAll("[data-prev-step]");
+
+let currentStep = 1;
 
 const models = {
   event: {
@@ -141,6 +147,18 @@ function simulateClaudeCopy() {
   syncCanvas();
 }
 
+function showStep(step) {
+  currentStep = Math.min(4, Math.max(1, step));
+
+  stepPanels.forEach((panel) => {
+    panel.classList.toggle("active", Number(panel.dataset.step) === currentStep);
+  });
+
+  stepDots.forEach((dot) => {
+    dot.classList.toggle("active", Number(dot.dataset.stepTarget) === currentStep);
+  });
+}
+
 typeInput.addEventListener("input", () => {
   renderFields();
   syncCanvas();
@@ -148,5 +166,18 @@ typeInput.addEventListener("input", () => {
 
 aiButton.addEventListener("click", simulateClaudeCopy);
 
+stepDots.forEach((dot) => {
+  dot.addEventListener("click", () => showStep(Number(dot.dataset.stepTarget)));
+});
+
+nextButtons.forEach((button) => {
+  button.addEventListener("click", () => showStep(currentStep + 1));
+});
+
+prevButtons.forEach((button) => {
+  button.addEventListener("click", () => showStep(currentStep - 1));
+});
+
 renderFields();
 syncCanvas();
+showStep(1);

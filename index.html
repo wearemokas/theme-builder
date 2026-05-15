@@ -31,7 +31,67 @@
           </div>
         </header>
 
-        <section class="workspace">
+        <section class="workspace creator-workspace">
+          <div class="panel creator-panel">
+            <div class="stepper" aria-label="Creazione grafica">
+              <button class="step-dot active" type="button" data-step-target="1"><span>1</span>Modello</button>
+              <button class="step-dot" type="button" data-step-target="2"><span>2</span>Campi</button>
+              <button class="step-dot" type="button" data-step-target="3"><span>3</span>AI</button>
+              <button class="step-dot" type="button" data-step-target="4"><span>4</span>Export</button>
+            </div>
+
+            <div class="step-panel active" data-step="1">
+              <h2>Scegli modello</h2>
+              <div class="field">
+                <label for="type">Tipo grafica</label>
+                <select id="type">
+                  <option value="event">Evento</option>
+                  <option value="menu">Menu</option>
+                  <option value="offer">Promo</option>
+                  <option value="launch">Lancio prodotto</option>
+                  <option value="story">Story Instagram</option>
+                </select>
+              </div>
+              <div class="model-summary" id="modelSummary"></div>
+              <button class="btn primary" type="button" data-next-step>Continua</button>
+            </div>
+
+            <div class="step-panel" data-step="2">
+              <h2>Compila campi</h2>
+              <div id="dynamicFields"></div>
+              <div class="step-actions">
+                <button class="btn" type="button" data-prev-step>Indietro</button>
+                <button class="btn primary" type="button" data-next-step>Anteprima</button>
+              </div>
+            </div>
+
+            <div class="step-panel" data-step="3">
+              <h2>AI e rifinitura</h2>
+              <div class="field">
+                <label for="notes">Note per Claude AI</label>
+                <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
+              </div>
+              <button class="btn warm" id="aiButton" type="button">Genera testo con AI</button>
+              <div class="step-actions">
+                <button class="btn" type="button" data-prev-step>Indietro</button>
+                <button class="btn primary" type="button" data-next-step>Vai a export</button>
+              </div>
+            </div>
+
+            <div class="step-panel" data-step="4">
+              <h2>Esporta</h2>
+              <div class="export-options">
+                <label><input type="radio" name="format" checked> Post Instagram 4:5</label>
+                <label><input type="radio" name="format"> Story 9:16</label>
+                <label><input type="radio" name="format"> PDF per stampa</label>
+              </div>
+              <div class="step-actions">
+                <button class="btn" type="button" data-prev-step>Indietro</button>
+                <button class="btn primary" type="button">Esporta grafica</button>
+              </div>
+            </div>
+          </div>
+
           <div class="canvas-wrap">
             <article class="canvas event" id="canvas">
               <div class="canvas-content">
@@ -45,29 +105,6 @@
                 </div>
               </div>
             </article>
-          </div>
-
-          <div class="panel">
-            <h2>Contenuto</h2>
-            <div class="field">
-              <label for="type">Tipo grafica</label>
-              <select id="type">
-                <option value="event">Evento</option>
-                <option value="menu">Menu</option>
-                <option value="offer">Promo</option>
-                <option value="launch">Lancio prodotto</option>
-                <option value="story">Story Instagram</option>
-              </select>
-            </div>
-
-            <div class="model-summary" id="modelSummary"></div>
-            <div id="dynamicFields"></div>
-
-            <div class="field">
-              <label for="notes">Note per Claude AI</label>
-              <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
-            </div>
-            <button class="btn warm" id="aiButton">Genera testo con Claude AI</button>
           </div>
 
           <div class="panel">

@@ -15,7 +15,7 @@
           <a class="active" href="admin.html">Back-end agenzia</a>
         </nav>
         <div class="sidebar-note">
-          Area agenzia: qui configuri clienti, palette, font, template disponibili e regole di generazione AI.
+          Area agenzia: qui configuri clienti, branding, template disponibili e regole di generazione AI.
         </div>
       </aside>
 
@@ -23,7 +23,7 @@
         <header class="topbar">
           <div>
             <h1>Back-end agenzia</h1>
-            <p>Gestione brand kit, modelli e permessi per i clienti.</p>
+            <p>Gestione brand kit, modelli, permessi e regole creative per ogni cliente.</p>
           </div>
           <div class="actions">
             <button class="btn">Anteprima cliente</button>
@@ -37,9 +37,9 @@
           <div class="stat"><strong>214</strong><span>Grafiche create</span></div>
         </section>
 
-        <section class="grid dashboard-grid">
+        <section class="grid brand-dashboard">
           <div class="panel">
-            <h2>Brand kit cliente</h2>
+            <h2>Scheda cliente</h2>
             <div class="field">
               <label for="client">Cliente</label>
               <select id="client">
@@ -49,16 +49,84 @@
               </select>
             </div>
             <div class="field">
-              <label for="logo">Logo</label>
+              <label for="clientStatus">Stato cliente</label>
+              <select id="clientStatus">
+                <option>Attivo</option>
+                <option>In onboarding</option>
+                <option>In pausa</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="industry">Settore</label>
+              <input id="industry" value="Ristorazione e nightlife">
+            </div>
+            <div class="field">
+              <label for="instagram">Profilo Instagram</label>
+              <input id="instagram" value="@studiosocialpack">
+            </div>
+            <div class="brand-preview">
+              <div class="brand-logo-preview">SSP</div>
+              <div>
+                <strong>Studio Social Pack</strong>
+                <span>Brand kit attivo per contenuti Instagram</span>
+              </div>
+            </div>
+            <button class="btn primary">Salva scheda cliente</button>
+          </div>
+
+          <div class="panel">
+            <h2>Logo e asset</h2>
+            <div class="field">
+              <label for="logo">Logo principale</label>
               <input id="logo" value="studio-social-pack-logo.png">
             </div>
             <div class="field">
-              <label>Palette</label>
-              <div class="swatches">
-                <span class="swatch" style="background:#1f7a8c"></span>
-                <span class="swatch" style="background:#ef8354"></span>
-                <span class="swatch" style="background:#182231"></span>
-                <span class="swatch" style="background:#f5f7fb"></span>
+              <label for="logoAlt">Logo alternativo <span class="optional-tag">Opzionale</span></label>
+              <input id="logoAlt" value="studio-social-pack-logo-white.png">
+            </div>
+            <div class="field">
+              <label for="photoFolder">Cartella foto approvate</label>
+              <input id="photoFolder" value="/assets/clienti/studio-social-pack/foto">
+            </div>
+            <div class="field">
+              <label for="imageRules">Regole immagini</label>
+              <textarea id="imageRules">Usare immagini luminose, poco affollate, con prodotto o locale ben visibile. Evitare foto troppo scure, stock generiche e grafiche con troppi elementi.</textarea>
+            </div>
+            <div class="asset-row">
+              <span class="asset-dot"></span>
+              <div><strong>Logo</strong><span>PNG trasparente, minimo 1200px</span></div>
+            </div>
+            <div class="asset-row">
+              <span class="asset-dot" style="background:#ef8354"></span>
+              <div><strong>Foto approvate</strong><span>Locale, prodotti, team, dettagli</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Palette e font</h2>
+            <div class="field">
+              <label>Palette colori</label>
+              <div class="color-grid">
+                <label class="color-token">
+                  <span style="background:#1f7a8c"></span>
+                  Primario
+                  <input value="#1F7A8C">
+                </label>
+                <label class="color-token">
+                  <span style="background:#ef8354"></span>
+                  Accento
+                  <input value="#EF8354">
+                </label>
+                <label class="color-token">
+                  <span style="background:#182231"></span>
+                  Testo scuro
+                  <input value="#182231">
+                </label>
+                <label class="color-token">
+                  <span style="background:#f5f7fb"></span>
+                  Sfondo
+                  <input value="#F5F7FB">
+                </label>
               </div>
             </div>
             <div class="field">
@@ -66,14 +134,59 @@
               <input id="font" value="Inter">
             </div>
             <div class="field">
-              <label for="rules">Regole AI e tono di voce</label>
-              <textarea id="rules">Tono professionale, diretto e premium. Evitare testi troppo lunghi. Inserire sempre una call to action chiara.</textarea>
+              <label for="fontSecondary">Font secondario <span class="optional-tag">Opzionale</span></label>
+              <input id="fontSecondary" value="Playfair Display">
             </div>
-            <button class="btn primary">Salva brand kit</button>
+            <div class="field">
+              <label for="visualStyle">Stile visuale</label>
+              <select id="visualStyle">
+                <option>Premium minimale</option>
+                <option>Editoriale elegante</option>
+                <option>Colorato e commerciale</option>
+                <option>Corporate pulito</option>
+              </select>
+            </div>
           </div>
 
           <div class="panel">
-            <h2>Template controllati</h2>
+            <h2>Tone of voice e AI</h2>
+            <div class="field">
+              <label for="tone">Tone of voice</label>
+              <select id="tone">
+                <option>Professionale, diretto e premium</option>
+                <option>Caldo, amichevole e locale</option>
+                <option>Elegante e aspirazionale</option>
+                <option>Giovane, energico e social</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="keywords">Parole chiave del brand</label>
+              <input id="keywords" value="qualita, atmosfera, esperienza, prenotazione">
+            </div>
+            <div class="field">
+              <label for="bannedWords">Parole da evitare <span class="optional-tag">Opzionale</span></label>
+              <input id="bannedWords" value="super offerta, imperdibile, gratis">
+            </div>
+            <div class="field">
+              <label for="rules">Regole Claude AI</label>
+              <textarea id="rules">Tono professionale, diretto e premium. Evitare testi troppo lunghi. Inserire sempre una call to action chiara.</textarea>
+            </div>
+            <div class="field">
+              <label for="captionRules">Regole caption Instagram</label>
+              <textarea id="captionRules">Massimo 700 caratteri. Prima riga forte, corpo breve, CTA finale. Hashtag solo se approvati dall'agenzia.</textarea>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Template consentiti</h2>
+            <div class="permission-list">
+              <label><input type="checkbox" checked> Evento Instagram</label>
+              <label><input type="checkbox" checked> Menu giornaliero</label>
+              <label><input type="checkbox" checked> Promo</label>
+              <label><input type="checkbox" checked> Story verticale</label>
+              <label><input type="checkbox" checked> Lancio prodotto</label>
+              <label><input type="checkbox"> Post editoriale</label>
+            </div>
             <div class="template-list">
               <article class="template-card">
                 <div class="template-thumb" style="--thumb-bg:#1f7a8c"><strong>Evento</strong></div>
@@ -97,26 +210,35 @@
                 </div>
               </article>
               <article class="template-card">
-                <div class="template-thumb" style="--thumb-bg:#263238"><strong>Story</strong></div>
-                <div class="template-meta">
-                  <h3>Story verticale</h3>
-                  <p>Formato 9:16 per Instagram Stories.</p>
-                </div>
-              </article>
-              <article class="template-card">
                 <div class="template-thumb" style="--thumb-bg:#ef8354;color:#14191f"><strong>New</strong></div>
                 <div class="template-meta">
                   <h3>Lancio prodotto</h3>
                   <p>Per novita, servizi e nuovi menu.</p>
                 </div>
               </article>
-              <article class="template-card">
-                <div class="template-thumb" style="--thumb-bg:#65748b"><strong>Quote</strong></div>
-                <div class="template-meta">
-                  <h3>Post editoriale</h3>
-                  <p>Frasi, recensioni e contenuti brand.</p>
-                </div>
-              </article>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Vincoli cliente</h2>
+            <div class="field">
+              <label for="approval">Approvazione contenuti</label>
+              <select id="approval">
+                <option>Cliente puo esportare senza revisione</option>
+                <option>Richiede approvazione agenzia</option>
+                <option>Solo bozze, export bloccato</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="lockedElements">Elementi bloccati</label>
+              <textarea id="lockedElements">Logo, font, palette, margini principali e posizione CTA non modificabili dal cliente.</textarea>
+            </div>
+            <div class="field">
+              <label for="exportFormats">Formati export</label>
+              <input id="exportFormats" value="Instagram post 4:5, Story 9:16, PDF">
+            </div>
+            <div class="ai-box">
+              Questi dati diventeranno il contesto fisso da passare a Claude AI quando il cliente genera testi, caption e varianti visuali.
             </div>
           </div>
         </section>
