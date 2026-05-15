@@ -434,10 +434,6 @@ async function regenerateTexts() {
     applyGeneratedText(result.generation);
   }
 
-  if (result.text) {
-    notesInput.value = result.text;
-  }
-
   setClientStatus(result.configured ? "Testi rigenerati." : result.text);
 }
 
