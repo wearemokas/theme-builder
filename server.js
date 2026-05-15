@@ -55,6 +55,7 @@ function seedDatabase() {
         bannedWords: "super offerta, imperdibile, gratis",
         imageRules: "Usare immagini luminose, poco affollate, con prodotto o locale ben visibile.",
         photoLibrary: [],
+        flyerReferences: "1. Titolo grande leggibile, massimo 2 righe, sempre bianco su sfondo scuro.\n2. Foto premium con area pulita per testo a sinistra.\n3. CTA in pill bianca in basso.\n4. Logo piccolo in alto.\n5. Evitare testo nero su foto scure.",
         aiRules: "Tono professionale, diretto e premium. Evitare testi troppo lunghi. Inserire sempre una call to action chiara.",
         captionRules: "Massimo 700 caratteri. Prima riga forte, corpo breve, CTA finale.",
         enabledTemplates: ["event", "menu", "offer", "story", "launch"],
@@ -205,6 +206,7 @@ function buildImagePrompt(payload, client) {
     `Creative mood: ${mood}.`,
     `Flyer content context: ${fieldText}.`,
     `Creative direction: ${payload.backgroundPrompt || ""}`,
+    `Approved flyer references and layout rules: ${client.flyerReferences || ""}`,
     "Quality bar: premium marketing agency output, refined lighting, layered depth, polished editorial composition, suitable for paid client work."
   ].join("\n");
 }
@@ -420,6 +422,7 @@ async function generateWithClaude(payload, client) {
     `Font: ${JSON.stringify(client.fonts)}`,
     `Stile visuale approvato: ${client.visualStyle}`,
     `Regole immagini: ${client.imageRules}`,
+    `Volantini esempio approvati: ${client.flyerReferences || ""}`,
     `Libreria foto cliente: ${JSON.stringify(client.photoLibrary || [])}`,
     `Foto caricata dal cliente: ${JSON.stringify(payload.userAsset || null)}`,
     `Template: ${payload.templateId}`,

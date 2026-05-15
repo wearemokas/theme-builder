@@ -83,6 +83,7 @@ function collectClient() {
     photoLibrary: activeClient?.photoLibrary || [],
     aiRules: value("rules"),
     captionRules: value("captionRules"),
+    flyerReferences: value("flyerReferences"),
     enabledTemplates: [...document.querySelectorAll("[data-template-enabled]:checked")].map((input) => input.value),
     approval: value("approval"),
     lockedElements: value("lockedElements"),
@@ -132,6 +133,7 @@ function renderClient(client) {
   setValue("imageRules", client.imageRules);
   setValue("rules", client.aiRules);
   setValue("captionRules", client.captionRules);
+  setValue("flyerReferences", client.flyerReferences);
   setValue("approval", client.approval);
   setValue("lockedElements", client.lockedElements);
   setValue("exportFormats", client.exportFormats);
