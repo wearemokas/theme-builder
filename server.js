@@ -314,9 +314,10 @@ async function generateWithClaude(payload, client) {
     `Stile corrente: ${payload.currentStyle || "premium-night"}`,
     "Scegli uno stile grafico diverso e coerente con il brand. Se il testo cita elementi concreti come DJ, cena, cocktail, palestra, prodotto o speaker, lo sfondo deve richiamare quel soggetto.",
     "Se una foto della libreria o caricata dal cliente e adatta, usa selectedAssetId. Altrimenti prepara un prompt per uno sfondo AI con foto + elementi grafici.",
+    "visualMood deve descrivere il mondo visivo principale tra: botanical, dj, food, luxury, product, abstract.",
     "styleToken deve essere uno tra: premium-night, editorial-menu, bold-promo, warm-launch, clean-story.",
     "Rispondi solo con JSON valido nel formato:",
-    "{\"styleToken\":\"premium-night\",\"backgroundMode\":\"library-photo\",\"selectedAssetId\":\"asset-id-o-null\",\"backgroundPrompt\":\"foto realistica di un DJ in consolle, luci club, overlay brand minimale\",\"aiElements\":[\"light streaks\",\"grain premium\"],\"logoPlacement\":\"top-left\",\"designNotes\":\"...\"}"
+    "{\"styleToken\":\"premium-night\",\"backgroundMode\":\"library-photo\",\"selectedAssetId\":\"asset-id-o-null\",\"visualMood\":\"dj\",\"backgroundPrompt\":\"foto realistica di un DJ in consolle, luci club, overlay brand minimale\",\"aiElements\":[\"light streaks\",\"grain premium\"],\"logoPlacement\":\"top-left\",\"designNotes\":\"...\"}"
   ].join("\n");
 
   const prompt = payload.mode === "style" ? stylePrompt : textPrompt;

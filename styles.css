@@ -680,6 +680,255 @@ textarea {
   pointer-events: none;
 }
 
+.canvas.has-creative-bg {
+  background: #e4e2dc;
+}
+
+.canvas.has-creative-bg .canvas-ai-elements {
+  mix-blend-mode: normal;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.canvas.has-creative-bg .canvas-title {
+  color: #f8fafc;
+  max-width: 9ch;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.9),
+    0 5px 0 rgba(255, 255, 255, 0.28),
+    0 10px 18px rgba(0, 0, 0, 0.35);
+  text-transform: uppercase;
+}
+
+.canvas.has-creative-bg .canvas-kicker {
+  color: rgba(22, 32, 51, 0.82);
+}
+
+.canvas.has-creative-bg .canvas-badge {
+  background: transparent;
+  color: #fff;
+  font-size: 20px;
+  padding: 0;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.28);
+  text-transform: uppercase;
+}
+
+.canvas.creative-botanical {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.86), transparent 24%),
+    linear-gradient(180deg, #d9d8d2, #b9b8af);
+  color: #172033;
+}
+
+.canvas.creative-botanical .canvas-ai-elements {
+  background:
+    radial-gradient(circle at 50% 49%, rgba(255, 255, 255, 0.72), transparent 20%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(69, 74, 61, 0.24));
+}
+
+.canvas.creative-dj {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(239, 131, 84, 0.5), transparent 23%),
+    radial-gradient(circle at 72% 18%, rgba(31, 122, 140, 0.7), transparent 26%),
+    linear-gradient(180deg, #141a26, #06080d);
+}
+
+.canvas.creative-food {
+  background:
+    radial-gradient(circle at 52% 50%, rgba(255, 255, 255, 0.76), transparent 22%),
+    linear-gradient(145deg, #f6efe3, #d2b98c);
+  color: #221b13;
+}
+
+.canvas.creative-luxury {
+  background:
+    radial-gradient(circle at 52% 40%, rgba(255, 255, 255, 0.16), transparent 24%),
+    linear-gradient(150deg, #111827, #4d3b2c 54%, #d6b16e);
+}
+
+.canvas.creative-product,
+.canvas.creative-abstract {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(239, 131, 84, 0.5), transparent 22%),
+    linear-gradient(145deg, #1f7a8c, #182231);
+}
+
+.leaf,
+.flower,
+.butterfly,
+.vine,
+.beam,
+.pulse,
+.equalizer,
+.plate,
+.herb,
+.steam,
+.shine,
+.frame-line,
+.product-glow,
+.grid-line,
+.orb {
+  display: block;
+  position: absolute;
+}
+
+.leaf {
+  background:
+    radial-gradient(ellipse at 34% 38%, rgba(255, 255, 255, 0.8), transparent 12%),
+    linear-gradient(135deg, #7bd35a, #1f7a31 58%, #13501f);
+  border-radius: 80% 8% 80% 8%;
+  box-shadow: 0 8px 16px rgba(28, 83, 29, 0.22);
+  height: 54px;
+  transform: rotate(-24deg);
+  width: 30px;
+}
+
+.leaf-a { left: 7%; top: 9%; }
+.leaf-b { right: 8%; top: 7%; transform: rotate(38deg); }
+.leaf-c { bottom: 7%; right: 12%; transform: rotate(-42deg); }
+
+.vine {
+  border-left: 2px solid rgba(32, 85, 39, 0.72);
+  border-radius: 50%;
+  height: 82%;
+  width: 34%;
+}
+
+.vine-a {
+  left: -7%;
+  top: 6%;
+  transform: rotate(-18deg);
+}
+
+.vine-b {
+  right: -10%;
+  top: 10%;
+  transform: rotate(18deg);
+}
+
+.flower {
+  background:
+    radial-gradient(circle, #f4d06f 0 9%, transparent 10%),
+    radial-gradient(circle at 30% 30%, #f7cad0 0 18%, transparent 19%),
+    radial-gradient(circle at 70% 32%, #f7cad0 0 18%, transparent 19%),
+    radial-gradient(circle at 35% 72%, #ffffff 0 20%, transparent 21%),
+    radial-gradient(circle at 70% 70%, #e7a8b5 0 18%, transparent 19%);
+  filter: drop-shadow(0 10px 14px rgba(49, 45, 40, 0.24));
+  height: 120px;
+  width: 150px;
+}
+
+.flower-a { bottom: 30%; left: 28%; }
+.flower-b { bottom: 27%; right: 22%; transform: scale(0.78) rotate(18deg); }
+
+.butterfly {
+  background:
+    radial-gradient(ellipse at 34% 50%, rgba(80, 179, 174, 0.75), transparent 34%),
+    radial-gradient(ellipse at 66% 50%, rgba(80, 179, 174, 0.75), transparent 34%);
+  height: 24px;
+  left: 55%;
+  top: 17%;
+  transform: rotate(22deg);
+  width: 36px;
+}
+
+.beam {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  height: 160%;
+  top: -30%;
+  transform-origin: center;
+  width: 10px;
+}
+
+.beam-a { left: 22%; transform: rotate(28deg); }
+.beam-b { left: 55%; transform: rotate(-22deg); }
+.beam-c { right: 18%; transform: rotate(14deg); }
+
+.pulse {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  height: 220px;
+  width: 220px;
+}
+
+.pulse-a { left: -20%; top: 20%; }
+.pulse-b { bottom: -10%; right: -18%; }
+
+.equalizer {
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 8px, transparent 8px 18px);
+  bottom: 20%;
+  height: 80px;
+  left: 0;
+  right: 0;
+}
+
+.plate {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(230, 216, 190, 0.78) 62%, transparent 63%);
+  border-radius: 999px;
+  height: 190px;
+  left: 26%;
+  top: 35%;
+  width: 190px;
+}
+
+.herb {
+  background: linear-gradient(135deg, #4f9d43, #1f6f32);
+  border-radius: 80% 10% 80% 10%;
+  height: 42px;
+  width: 20px;
+}
+
+.herb-a { left: 14%; top: 20%; transform: rotate(-36deg); }
+.herb-b { right: 16%; bottom: 18%; transform: rotate(42deg); }
+
+.steam {
+  border-left: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  height: 70px;
+  width: 24px;
+}
+
+.steam-a { left: 40%; top: 22%; }
+.steam-b { left: 54%; top: 19%; transform: rotate(16deg); }
+
+.shine {
+  background: rgba(255, 255, 255, 0.72);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  height: 34px;
+  width: 34px;
+}
+
+.shine-a { right: 20%; top: 17%; }
+.shine-b { left: 17%; bottom: 24%; transform: scale(0.72); }
+
+.frame-line {
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  inset: 7%;
+}
+
+.frame-b {
+  inset: 10%;
+}
+
+.product-glow,
+.orb {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.72), rgba(239, 131, 84, 0.38), transparent 68%);
+  border-radius: 999px;
+  height: 240px;
+  left: 24%;
+  top: 28%;
+  width: 240px;
+}
+
+.grid-line {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.grid-a { height: 1px; left: 0; right: 0; top: 34%; }
+.grid-b { bottom: 24%; height: 1px; left: 0; right: 0; }
+.orb-a { left: -10%; top: 8%; }
+.orb-b { left: 60%; top: 55%; transform: scale(0.7); }
+
 .canvas.has-photo::after {
   background: linear-gradient(180deg, rgba(8, 13, 24, 0.16), rgba(8, 13, 24, 0.78));
   content: "";

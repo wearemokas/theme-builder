@@ -39,6 +39,8 @@ let userUploadedAsset = null;
 let activeBackgroundAsset = null;
 let activeAiElements = [];
 let activeFormat = "instagram-post";
+let activeCreativeMood = "";
+let activeBackgroundPrompt = "";
 
 const styleClasses = ["premium-night", "editorial-menu", "bold-promo", "warm-launch", "clean-story"];
 const exportFormats = {
@@ -189,6 +191,83 @@ function allAssets() {
   return [userUploadedAsset, ...(activeClient?.photoLibrary || [])].filter(Boolean);
 }
 
+function detectCreativeMood(text) {
+  const value = text.toLowerCase();
+
+  if (/(garden|giardino|botanic|botanico|green|verde|foglie|foglia|fiore|fiori|floral|natura|plant|piante)/.test(value)) {
+    return "botanical";
+  }
+
+  if (/(dj|club|disco|dance|live set|console|consolle|nightlife|serata|party)/.test(value)) {
+    return "dj";
+  }
+
+  if (/(menu|cena|pranzo|food|ristorante|drink|cocktail|pizza|burger|piatto|degustazione)/.test(value)) {
+    return "food";
+  }
+
+  if (/(premium|luxury|lusso|elegante|gala|fashion|atelier|jewelry|gioielli)/.test(value)) {
+    return "luxury";
+  }
+
+  if (/(prodotto|launch|lancio|collezione|shop|pack|servizio)/.test(value)) {
+    return "product";
+  }
+
+  return "abstract";
+}
+
+function renderCreativeElements(mood) {
+  if (!canvasAiElements) return;
+
+  const elements = {
+    botanical: [
+      '<span class="leaf leaf-a"></span>',
+      '<span class="leaf leaf-b"></span>',
+      '<span class="leaf leaf-c"></span>',
+      '<span class="vine vine-a"></span>',
+      '<span class="vine vine-b"></span>',
+      '<span class="flower flower-a"></span>',
+      '<span class="flower flower-b"></span>',
+      '<span class="butterfly butterfly-a"></span>'
+    ],
+    dj: [
+      '<span class="beam beam-a"></span>',
+      '<span class="beam beam-b"></span>',
+      '<span class="beam beam-c"></span>',
+      '<span class="pulse pulse-a"></span>',
+      '<span class="pulse pulse-b"></span>',
+      '<span class="equalizer"></span>'
+    ],
+    food: [
+      '<span class="plate plate-a"></span>',
+      '<span class="herb herb-a"></span>',
+      '<span class="herb herb-b"></span>',
+      '<span class="steam steam-a"></span>',
+      '<span class="steam steam-b"></span>'
+    ],
+    luxury: [
+      '<span class="shine shine-a"></span>',
+      '<span class="shine shine-b"></span>',
+      '<span class="frame-line frame-a"></span>',
+      '<span class="frame-line frame-b"></span>'
+    ],
+    product: [
+      '<span class="product-glow"></span>',
+      '<span class="grid-line grid-a"></span>',
+      '<span class="grid-line grid-b"></span>',
+      '<span class="shine shine-a"></span>'
+    ],
+    abstract: [
+      '<span class="orb orb-a"></span>',
+      '<span class="orb orb-b"></span>',
+      '<span class="beam beam-a"></span>'
+    ]
+  };
+
+  canvasAiElements.innerHTML = (elements[mood] || elements.abstract).join("");
+}
+
 function currentFormat() {
   if (activeFormat !== "custom") {
     return exportFormats[activeFormat];
@@ -256,11 +335,14 @@ function syncCanvas() {
     .filter(Boolean);
 
   const fieldText = Object.values(collectFields()).join(" ").toLowerCase();
+  const creativeText = `${fieldText} ${activeBackgroundPrompt} ${activeAiElements.join(" ")}`;
+  const creativeMood = activeCreativeMood || detectCreativeMood(creativeText);
   const hasDjSignal = fieldText.includes("dj") || activeAiElements.join(" ").toLowerCase().includes("dj");
   const photoClass = activeBackgroundAsset?.url ? " has-photo" : "";
+  const creativeClass = activeBackgroundAsset?.url ? "" : ` has-creative-bg creative-${creativeMood}`;
   const djClass = hasDjSignal ? " has-ai-dj" : "";
 
-  canvas.className = `canvas ${typeInput.value} style-${activeStyle}${photoClass}${djClass}`;
+  canvas.className = `canvas ${typeInput.value} style-${activeStyle}${photoClass}${creativeClass}${djClass}`;
   if (canvasBg) {
     if (activeBackgroundAsset?.url) {
       canvasBg.style.setProperty("--canvas-photo", `url("${activeBackgroundAsset.url}")`);
@@ -271,6 +353,7 @@ function syncCanvas() {
   if (canvasAiElements) {
     canvasAiElements.title = activeAiElements.join(", ");
   }
+  renderCreativeElements(creativeMood);
   syncFormat();
   canvasType.textContent = model.label;
   canvasTitle.textContent = title;
@@ -371,6 +454,8 @@ async function regenerateStyle() {
   const selectedAsset = allAssets().find((asset) => asset.id === selectedAssetId);
   activeBackgroundAsset = selectedAsset || userUploadedAsset || activeBackgroundAsset;
   activeAiElements = result.generation?.aiElements || [];
+  activeBackgroundPrompt = result.generation?.backgroundPrompt || "";
+  activeCreativeMood = result.generation?.visualMood || detectCreativeMood(`${activeBackgroundPrompt} ${activeAiElements.join(" ")} ${Object.values(collectFields()).join(" ")}`);
 
   syncStyleButtons();
   syncCanvas();
