@@ -40,9 +40,8 @@
                   <div class="canvas-title" id="canvasTitle">Aperitivo Live</div>
                 </div>
                 <div class="canvas-detail">
-                  <span id="canvasDate">Venerdi 24 maggio</span>
-                  <span id="canvasPlace">RHD Lounge, Milano</span>
-                  <span class="canvas-badge">Prenota ora</span>
+                  <div id="canvasDetails"></div>
+                  <span class="canvas-badge" id="canvasBadge">Prenota ora</span>
                 </div>
               </div>
             </article>
@@ -56,20 +55,14 @@
                 <option value="event">Evento</option>
                 <option value="menu">Menu</option>
                 <option value="offer">Promo</option>
+                <option value="launch">Lancio prodotto</option>
+                <option value="story">Story Instagram</option>
               </select>
             </div>
-            <div class="field">
-              <label for="title">Titolo</label>
-              <input id="title" value="Aperitivo Live">
-            </div>
-            <div class="field">
-              <label for="date">Data o periodo</label>
-              <input id="date" value="Venerdi 24 maggio">
-            </div>
-            <div class="field">
-              <label for="place">Luogo</label>
-              <input id="place" value="RHD Lounge, Milano">
-            </div>
+
+            <div class="model-summary" id="modelSummary"></div>
+            <div id="dynamicFields"></div>
+
             <div class="field">
               <label for="notes">Note per Claude AI</label>
               <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
