@@ -172,6 +172,120 @@ function safeFileName(filename) {
   return `${Date.now()}-${base || "foto"}${[".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg"}`;
 }
 
+function imageSizeForFormat(format = {}) {
+  const width = Number(format.width || 1080);
+  const height = Number(format.height || 1350);
+  const ratio = width / height;
+
+  if (ratio > 1.2) {
+    return "1536x1024";
+  }
+
+  if (ratio < 0.82) {
+    return "1024x1536";
+  }
+
+  return "1024x1024";
+}
+
+function buildImagePrompt(payload, client) {
+  const fields = payload.fields || {};
+  const fieldText = Object.values(fields).filter(Boolean).join(", ");
+  const mood = payload.visualMood || "premium editorial";
+  const format = payload.format ? `${payload.format.label} ${payload.format.width}x${payload.format.height}` : "Instagram poster";
+
+  return [
+    "Create a premium professional flyer background image only.",
+    "No readable text, no typography, no logo, no watermark, no poster title.",
+    "Leave a clean central composition area for text overlay.",
+    "Use elegant realistic/illustrated visual elements, not flat CSS shapes.",
+    `Brand: ${client.name}. Industry: ${client.industry}.`,
+    `Brand palette to subtly respect: ${JSON.stringify(client.colors)}.`,
+    `Format: ${format}.`,
+    `Creative mood: ${mood}.`,
+    `Flyer content context: ${fieldText}.`,
+    `Creative direction: ${payload.backgroundPrompt || ""}`,
+    "Quality bar: premium marketing agency output, refined lighting, layered depth, polished editorial composition, suitable for paid client work."
+  ].join("\n");
+}
+
+async function generateImageWithOpenAI(payload, client) {
+  const apiKey = process.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
+    return {
+      configured: false,
+      error: "Manca OPENAI_API_KEY su Railway. Serve per generare immagini reali professionali."
+    };
+  }
+
+  const prompt = buildImagePrompt(payload, client);
+  const size = imageSizeForFormat(payload.format);
+
+  const response = await fetch("https://api.openai.com/v1/images/generations", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: process.env.OPENAI_IMAGE_MODEL || "gpt-image-1",
+      prompt,
+      size,
+      quality: process.env.OPENAI_IMAGE_QUALITY || "medium",
+      n: 1
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    return {
+      configured: true,
+      error: data.error?.message || "OpenAI image generation error"
+    };
+  }
+
+  const b64 = data.data?.[0]?.b64_json;
+
+  if (!b64) {
+    return {
+      configured: true,
+      error: "OpenAI non ha restituito un'immagine."
+    };
+  }
+
+  const clientId = client.id || "client";
+  const generatedDir = path.join(uploadDir, clientId, "generated");
+  fs.mkdirSync(generatedDir, { recursive: true });
+
+  const filename = `${Date.now()}-${(payload.visualMood || "background").replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.png`;
+  const target = path.join(generatedDir, filename);
+  fs.writeFileSync(target, Buffer.from(b64, "base64"));
+
+  const asset = {
+    id: `generated-${Date.now()}`,
+    source: "ai-generated",
+    name: filename,
+    url: `/uploads/${clientId}/generated/${filename}`,
+    mime: "image/png",
+    createdAt: new Date().toISOString(),
+    description: payload.backgroundPrompt || `Sfondo AI ${payload.visualMood || "professionale"}`,
+    tags: [payload.visualMood || "ai-background"],
+    bestFor: [payload.templateId].filter(Boolean),
+    usable: true,
+    prompt,
+    size
+  };
+
+  return {
+    configured: true,
+    asset,
+    prompt,
+    size
+  };
+}
+
 function resolveFile(urlPath) {
   const cleanPath = decodeURIComponent(urlPath.split("?")[0]);
   const requested = cleanPath === "/" ? "/index.html" : cleanPath;
@@ -476,6 +590,13 @@ async function handleApi(req, res, pathname) {
     const payload = await readBody(req);
     const client = db.clients.find((item) => item.id === (payload.clientId || "studio-social-pack")) || db.clients[0];
     sendJson(res, 200, await generateWithClaude(payload, client));
+    return;
+  }
+
+  if (req.method === "POST" && pathname === "/api/ai/image") {
+    const payload = await readBody(req);
+    const client = db.clients.find((item) => item.id === (payload.clientId || "studio-social-pack")) || db.clients[0];
+    sendJson(res, 200, await generateImageWithOpenAI(payload, client));
     return;
   }
 

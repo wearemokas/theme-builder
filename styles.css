@@ -660,6 +660,18 @@ textarea {
   color: #fff;
 }
 
+.real-bg-actions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 0.55fr;
+}
+
+.real-bg-status {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .canvas-wrap {
   display: grid;
   place-items: center;

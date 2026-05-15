@@ -17,6 +17,8 @@ const formatCurrent = document.querySelector("#formatCurrent");
 const exportButton = document.querySelector("#exportButton");
 const generatedBgButtons = document.querySelectorAll("[data-bg-mood]");
 const clearPhotoButton = document.querySelector("#clearPhotoButton");
+const realImageButton = document.querySelector("#realImageButton");
+const realImageStatus = document.querySelector("#realImageStatus");
 
 const canvas = document.querySelector("#canvas");
 const canvasBg = document.querySelector("#canvasBg");
@@ -348,7 +350,7 @@ function syncCanvas() {
     : activeCreativeMood || detectCreativeMood(creativeText);
   const hasDjSignal = fieldText.includes("dj") || activeAiElements.join(" ").toLowerCase().includes("dj");
   const photoClass = activeBackgroundAsset?.url ? " has-photo" : "";
-  const creativeClass = activeBackgroundAsset?.url ? "" : ` has-creative-bg creative-${creativeMood}`;
+  const creativeClass = "";
   const djClass = hasDjSignal ? " has-ai-dj" : "";
 
   canvas.className = `canvas ${typeInput.value} style-${activeStyle}${photoClass}${creativeClass}${djClass}`;
@@ -362,7 +364,9 @@ function syncCanvas() {
   if (canvasAiElements) {
     canvasAiElements.title = activeAiElements.join(", ");
   }
-  renderCreativeElements(creativeMood);
+  if (canvasAiElements) {
+    canvasAiElements.innerHTML = "";
+  }
   syncFormat();
   canvasType.textContent = model.label;
   canvasTitle.textContent = title;
@@ -379,6 +383,46 @@ function syncGeneratedBgButtons() {
   generatedBgButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.bgMood === manualCreativeMood);
   });
+}
+
+async function generateRealImageBackground() {
+  const fields = collectFields();
+  const visualMood = manualCreativeMood === "auto"
+    ? detectCreativeMood(Object.values(fields).join(" "))
+    : manualCreativeMood;
+
+  if (realImageStatus) {
+    realImageStatus.textContent = "Generazione immagine reale in corso...";
+  }
+
+  const result = await api("/api/ai/image", {
+    method: "POST",
+    body: JSON.stringify({
+      clientId: activeClient?.id || "studio-social-pack",
+      templateId: typeInput.value,
+      format: currentFormat(),
+      fields,
+      visualMood,
+      backgroundPrompt: activeBackgroundPrompt || `${visualMood} premium flyer background, elegant, realistic, professional`
+    })
+  });
+
+  if (result.asset?.url) {
+    activeBackgroundAsset = result.asset;
+    activeCreativeMood = visualMood;
+    activeAiElements = [];
+    activeBackgroundPrompt = result.prompt || activeBackgroundPrompt;
+    if (realImageStatus) {
+      realImageStatus.textContent = `Immagine AI reale generata: ${result.size || ""}`;
+    }
+    syncCanvas();
+    return;
+  }
+
+  if (realImageStatus) {
+    realImageStatus.textContent = result.error || "Immagine non generata.";
+  }
+  setClientStatus(result.error || "Immagine non generata.");
 }
 
 function setFieldValue(id, value) {
@@ -609,18 +653,27 @@ if (exportButton) {
 generatedBgButtons.forEach((button) => {
   button.addEventListener("click", () => {
     manualCreativeMood = button.dataset.bgMood;
-    activeBackgroundAsset = manualCreativeMood === "auto" ? activeBackgroundAsset : null;
     syncGeneratedBgButtons();
-    syncCanvas();
+    if (realImageStatus) {
+      realImageStatus.textContent = `Concept selezionato: ${button.textContent.trim()}. Ora genera l'immagine reale.`;
+    }
   });
 });
 
 if (clearPhotoButton) {
   clearPhotoButton.addEventListener("click", () => {
     activeBackgroundAsset = null;
-    manualCreativeMood = manualCreativeMood === "auto" ? detectCreativeMood(Object.values(collectFields()).join(" ")) : manualCreativeMood;
     syncGeneratedBgButtons();
     syncCanvas();
+  });
+}
+
+if (realImageButton) {
+  realImageButton.addEventListener("click", () => {
+    generateRealImageBackground().catch((error) => {
+      if (realImageStatus) realImageStatus.textContent = `Errore immagine AI: ${error.message}`;
+      setClientStatus(`Errore immagine AI: ${error.message}`);
+    });
   });
 }
 
