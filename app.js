@@ -15,6 +15,8 @@ const customWidthInput = document.querySelector("#customWidth");
 const customHeightInput = document.querySelector("#customHeight");
 const formatCurrent = document.querySelector("#formatCurrent");
 const exportButton = document.querySelector("#exportButton");
+const generatedBgButtons = document.querySelectorAll("[data-bg-mood]");
+const clearPhotoButton = document.querySelector("#clearPhotoButton");
 
 const canvas = document.querySelector("#canvas");
 const canvasBg = document.querySelector("#canvasBg");
@@ -41,6 +43,7 @@ let activeAiElements = [];
 let activeFormat = "instagram-post";
 let activeCreativeMood = "";
 let activeBackgroundPrompt = "";
+let manualCreativeMood = "auto";
 
 const styleClasses = ["premium-night", "editorial-menu", "bold-promo", "warm-launch", "clean-story"];
 const exportFormats = {
@@ -282,10 +285,14 @@ function currentFormat() {
 
 function syncFormat() {
   const format = currentFormat();
+  const ratio = format.width / format.height;
 
   if (canvas) {
     canvas.style.aspectRatio = `${format.width} / ${format.height}`;
     canvas.dataset.format = activeFormat;
+    canvas.classList.toggle("format-wide", ratio > 1.25);
+    canvas.classList.toggle("format-squareish", ratio >= 0.9 && ratio <= 1.1);
+    canvas.classList.toggle("format-tall", ratio < 0.72);
   }
 
   if (formatCurrent) {
@@ -336,7 +343,9 @@ function syncCanvas() {
 
   const fieldText = Object.values(collectFields()).join(" ").toLowerCase();
   const creativeText = `${fieldText} ${activeBackgroundPrompt} ${activeAiElements.join(" ")}`;
-  const creativeMood = activeCreativeMood || detectCreativeMood(creativeText);
+  const creativeMood = manualCreativeMood !== "auto"
+    ? manualCreativeMood
+    : activeCreativeMood || detectCreativeMood(creativeText);
   const hasDjSignal = fieldText.includes("dj") || activeAiElements.join(" ").toLowerCase().includes("dj");
   const photoClass = activeBackgroundAsset?.url ? " has-photo" : "";
   const creativeClass = activeBackgroundAsset?.url ? "" : ` has-creative-bg creative-${creativeMood}`;
@@ -363,6 +372,12 @@ function syncCanvas() {
     const item = document.createElement("span");
     item.textContent = detail;
     canvasDetails.appendChild(item);
+  });
+}
+
+function syncGeneratedBgButtons() {
+  generatedBgButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.bgMood === manualCreativeMood);
   });
 }
 
@@ -456,6 +471,9 @@ async function regenerateStyle() {
   activeAiElements = result.generation?.aiElements || [];
   activeBackgroundPrompt = result.generation?.backgroundPrompt || "";
   activeCreativeMood = result.generation?.visualMood || detectCreativeMood(`${activeBackgroundPrompt} ${activeAiElements.join(" ")} ${Object.values(collectFields()).join(" ")}`);
+  if (manualCreativeMood === "auto") {
+    syncGeneratedBgButtons();
+  }
 
   syncStyleButtons();
   syncCanvas();
@@ -592,9 +610,28 @@ if (exportButton) {
   });
 }
 
+generatedBgButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    manualCreativeMood = button.dataset.bgMood;
+    activeBackgroundAsset = manualCreativeMood === "auto" ? activeBackgroundAsset : null;
+    syncGeneratedBgButtons();
+    syncCanvas();
+  });
+});
+
+if (clearPhotoButton) {
+  clearPhotoButton.addEventListener("click", () => {
+    activeBackgroundAsset = null;
+    manualCreativeMood = manualCreativeMood === "auto" ? detectCreativeMood(Object.values(collectFields()).join(" ")) : manualCreativeMood;
+    syncGeneratedBgButtons();
+    syncCanvas();
+  });
+}
+
 renderFields();
 syncCanvas();
 syncFormat();
+syncGeneratedBgButtons();
 showStep(1);
 
 api("/api/clients/studio-social-pack")

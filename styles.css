@@ -626,6 +626,40 @@ textarea {
   width: 100%;
 }
 
+.generated-bg-panel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.generated-bg-panel h2 {
+  margin-bottom: 0;
+}
+
+.generated-bg-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.generated-bg {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+  min-height: 40px;
+  padding: 8px;
+}
+
+.generated-bg.active {
+  background: #182231;
+  border-color: #182231;
+  color: #fff;
+}
+
 .canvas-wrap {
   display: grid;
   place-items: center;
@@ -650,6 +684,39 @@ textarea {
 
 .canvas[data-format="landscape"] {
   width: min(100%, 520px);
+}
+
+.canvas.format-wide .canvas-content {
+  align-items: flex-end;
+  flex-direction: row;
+  gap: 22px;
+}
+
+.canvas.format-wide .canvas-title {
+  font-size: clamp(30px, 4vw, 48px);
+  max-width: 9ch;
+}
+
+.canvas.format-wide .canvas-detail {
+  max-width: 42%;
+}
+
+.canvas.format-squareish .canvas-title {
+  font-size: clamp(30px, 5.2vw, 50px);
+  max-width: 10ch;
+}
+
+.canvas.format-squareish .canvas-detail {
+  font-size: 14px;
+}
+
+.canvas.format-tall .canvas-content {
+  padding: 30px;
+}
+
+.canvas.format-tall .canvas-title {
+  font-size: clamp(36px, 7vw, 56px);
+  max-width: 7.4ch;
 }
 
 .canvas-bg,
@@ -698,6 +765,19 @@ textarea {
     0 5px 0 rgba(255, 255, 255, 0.28),
     0 10px 18px rgba(0, 0, 0, 0.35);
   text-transform: uppercase;
+}
+
+.canvas.has-creative-bg.format-squareish .canvas-title {
+  font-size: clamp(30px, 5vw, 44px);
+  max-width: 9ch;
+}
+
+.canvas.has-creative-bg.format-wide .canvas-title {
+  font-size: clamp(28px, 3.2vw, 40px);
+}
+
+.canvas.has-creative-bg.format-wide .canvas-badge {
+  font-size: 16px;
 }
 
 .canvas.has-creative-bg .canvas-kicker {
@@ -1380,6 +1460,14 @@ textarea {
     padding: 8px;
   }
 
+  .generated-bg-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .generated-bg {
+    min-height: 36px;
+  }
+
   .canvas {
     width: min(100%, 360px);
     max-height: calc(100svh - 230px);
@@ -1391,6 +1479,14 @@ textarea {
 
   .canvas-title {
     font-size: clamp(34px, 12vw, 48px);
+  }
+
+  .canvas.format-squareish .canvas-title {
+    font-size: clamp(28px, 10vw, 40px);
+  }
+
+  .canvas.format-wide .canvas-title {
+    font-size: clamp(24px, 8vw, 34px);
   }
 
   .canvas-detail {
@@ -1429,6 +1525,10 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .generated-bg-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .canvas {
     width: 100%;
     max-height: none;
@@ -1440,6 +1540,15 @@ textarea {
 
   .canvas-content {
     padding: 20px;
+  }
+
+  .canvas.format-wide .canvas-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .canvas.format-wide .canvas-detail {
+    max-width: none;
   }
 
   .canvas-kicker {
