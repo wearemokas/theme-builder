@@ -752,7 +752,7 @@ textarea {
   }
 
   .topbar h1 {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .topbar p {
@@ -775,6 +775,7 @@ textarea {
 
   .creator-panel {
     order: 1;
+    gap: 10px;
   }
 
   .canvas-wrap {
@@ -787,28 +788,37 @@ textarea {
 
   .stepper {
     position: sticky;
-    top: 118px;
+    top: 44px;
     z-index: 10;
+    gap: 4px;
+    padding: 4px;
   }
 
   .step-dot {
     flex-direction: column;
-    gap: 3px;
-    min-height: 50px;
+    gap: 2px;
+    min-height: 40px;
+    font-size: 11px;
+    padding: 4px;
+  }
+
+  .step-dot span {
+    height: 20px;
+    width: 20px;
   }
 
   .panel {
-    padding: 14px;
+    padding: 10px;
   }
 
   .panel h2,
   .panel h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
+    font-size: 17px;
+    margin-bottom: 8px;
   }
 
   .field {
-    margin-bottom: 11px;
+    margin-bottom: 8px;
   }
 
   .field input,
@@ -820,6 +830,10 @@ textarea {
 
   .field textarea {
     min-height: 76px;
+  }
+
+  .compact-summary {
+    display: none;
   }
 
   .canvas {

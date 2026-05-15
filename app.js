@@ -151,7 +151,7 @@ function fieldValue(id) {
 function renderFields() {
   const model = currentModel();
 
-  modelSummary.innerHTML = `<strong>${model.label}</strong>${model.summary}`;
+  modelSummary.textContent = model.label;
   dynamicFields.innerHTML = model.fields.map((field) => {
     const optional = field.optional ? '<span class="optional-tag">Opzionale</span>' : "";
     return `
