@@ -26,8 +26,8 @@
             <p>Template approvati dall'agenzia per post, volantini, eventi e menu.</p>
           </div>
           <div class="actions">
-            <button class="btn">Salva bozza</button>
-            <button class="btn primary">Esporta Instagram</button>
+            <button class="btn" id="saveDraftButton" type="button">Salva bozza</button>
+            <button class="btn primary" type="button">Esporta Instagram</button>
           </div>
         </header>
 
@@ -111,19 +111,20 @@
             <h2>Brand applicato</h2>
             <div class="asset-row">
               <span class="asset-dot"></span>
-              <div><strong>Colore primario</strong><span>#1F7A8C</span></div>
+              <div><strong>Colore primario</strong><span id="brandPrimary">#1F7A8C</span></div>
             </div>
             <div class="asset-row">
               <span class="asset-dot" style="background:#ef8354"></span>
-              <div><strong>Colore accento</strong><span>#EF8354</span></div>
+              <div><strong>Colore accento</strong><span id="brandAccent">#EF8354</span></div>
             </div>
             <div class="asset-row">
               <span class="asset-dot" style="background:#182231"></span>
-              <div><strong>Font</strong><span>Inter Bold / Regular</span></div>
+              <div><strong>Font</strong><span id="brandFont">Inter Bold / Regular</span></div>
             </div>
             <div class="ai-box">
               Integrazione prevista: Claude AI generera copy, varianti creative e suggerimenti layout partendo dai vincoli del brand scelti dall'agenzia.
             </div>
+            <div class="model-summary" id="clientStatus">Backend collegato.</div>
           </div>
         </section>
       </main>

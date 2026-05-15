@@ -27,7 +27,7 @@
           </div>
           <div class="actions">
             <button class="btn">Anteprima cliente</button>
-            <button class="btn primary">Pubblica modifiche</button>
+            <button class="btn primary" data-save-client>Pubblica modifiche</button>
           </div>
         </header>
 
@@ -43,10 +43,12 @@
             <div class="field">
               <label for="client">Cliente</label>
               <select id="client">
-                <option>Studio Social Pack</option>
-                <option>Ristorante Milano Centro</option>
-                <option>Beauty Lab</option>
+                <option>Caricamento...</option>
               </select>
+            </div>
+            <div class="field">
+              <label for="clientName">Nome cliente</label>
+              <input id="clientName" value="Studio Social Pack">
             </div>
             <div class="field">
               <label for="clientStatus">Stato cliente</label>
@@ -71,7 +73,8 @@
                 <span>Brand kit attivo per contenuti Instagram</span>
               </div>
             </div>
-            <button class="btn primary">Salva scheda cliente</button>
+            <button class="btn primary" data-save-client>Salva scheda cliente</button>
+            <div class="model-summary" id="adminStatus">Backend collegato.</div>
           </div>
 
           <div class="panel">
@@ -110,22 +113,22 @@
                 <label class="color-token">
                   <span style="background:#1f7a8c"></span>
                   Primario
-                  <input value="#1F7A8C">
+                  <input id="colorPrimary" value="#1F7A8C">
                 </label>
                 <label class="color-token">
                   <span style="background:#ef8354"></span>
                   Accento
-                  <input value="#EF8354">
+                  <input id="colorAccent" value="#EF8354">
                 </label>
                 <label class="color-token">
                   <span style="background:#182231"></span>
                   Testo scuro
-                  <input value="#182231">
+                  <input id="colorDark" value="#182231">
                 </label>
                 <label class="color-token">
                   <span style="background:#f5f7fb"></span>
                   Sfondo
-                  <input value="#F5F7FB">
+                  <input id="colorBackground" value="#F5F7FB">
                 </label>
               </div>
             </div>
@@ -180,12 +183,12 @@
           <div class="panel">
             <h2>Template consentiti</h2>
             <div class="permission-list">
-              <label><input type="checkbox" checked> Evento Instagram</label>
-              <label><input type="checkbox" checked> Menu giornaliero</label>
-              <label><input type="checkbox" checked> Promo</label>
-              <label><input type="checkbox" checked> Story verticale</label>
-              <label><input type="checkbox" checked> Lancio prodotto</label>
-              <label><input type="checkbox"> Post editoriale</label>
+              <label><input type="checkbox" value="event" data-template-enabled checked> Evento Instagram</label>
+              <label><input type="checkbox" value="menu" data-template-enabled checked> Menu giornaliero</label>
+              <label><input type="checkbox" value="offer" data-template-enabled checked> Promo</label>
+              <label><input type="checkbox" value="story" data-template-enabled checked> Story verticale</label>
+              <label><input type="checkbox" value="launch" data-template-enabled checked> Lancio prodotto</label>
+              <label><input type="checkbox" value="editorial" data-template-enabled> Post editoriale</label>
             </div>
             <div class="template-list">
               <article class="template-card">
@@ -244,5 +247,6 @@
         </section>
       </main>
     </div>
+    <script src="admin.js"></script>
   </body>
 </html>

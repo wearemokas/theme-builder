@@ -1,0 +1,42 @@
+{
+  "clients": [
+    {
+      "id": "studio-social-pack",
+      "name": "Studio Social Pack",
+      "status": "Attivo",
+      "industry": "Ristorazione e nightlife",
+      "instagram": "@studiosocialpack",
+      "logo": "studio-social-pack-logo.png",
+      "logoAlt": "studio-social-pack-logo-white.png",
+      "photoFolder": "/assets/clienti/studio-social-pack/foto",
+      "colors": {
+        "primary": "#1F7A8C",
+        "accent": "#EF8354",
+        "dark": "#182231",
+        "background": "#F5F7FB"
+      },
+      "fonts": {
+        "primary": "Inter",
+        "secondary": "Playfair Display"
+      },
+      "visualStyle": "Premium minimale",
+      "tone": "Professionale, diretto e premium",
+      "keywords": "qualita, atmosfera, esperienza, prenotazione",
+      "bannedWords": "super offerta, imperdibile, gratis",
+      "imageRules": "Usare immagini luminose, poco affollate, con prodotto o locale ben visibile.",
+      "aiRules": "Tono professionale, diretto e premium. Evitare testi troppo lunghi. Inserire sempre una call to action chiara.",
+      "captionRules": "Massimo 700 caratteri. Prima riga forte, corpo breve, CTA finale.",
+      "enabledTemplates": [
+        "event",
+        "menu",
+        "offer",
+        "story",
+        "launch"
+      ],
+      "approval": "Cliente puo esportare senza revisione",
+      "lockedElements": "Logo, font, palette, margini principali e posizione CTA non modificabili dal cliente.",
+      "exportFormats": "Instagram post 4:5, Story 9:16, PDF"
+    }
+  ],
+  "projects": []
+}

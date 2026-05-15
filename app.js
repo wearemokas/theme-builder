@@ -13,8 +13,14 @@ const stepPanels = document.querySelectorAll(".step-panel");
 const stepDots = document.querySelectorAll("[data-step-target]");
 const nextButtons = document.querySelectorAll("[data-next-step]");
 const prevButtons = document.querySelectorAll("[data-prev-step]");
+const saveDraftButton = document.querySelector("#saveDraftButton");
+const clientStatus = document.querySelector("#clientStatus");
+const brandPrimary = document.querySelector("#brandPrimary");
+const brandAccent = document.querySelector("#brandAccent");
+const brandFont = document.querySelector("#brandFont");
 
 let currentStep = 1;
+let activeClient = null;
 
 const models = {
   event: {
@@ -90,6 +96,47 @@ function currentModel() {
   return models[typeInput.value];
 }
 
+async function api(path, options = {}) {
+  const response = await fetch(path, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || `API ${response.status}`);
+  }
+
+  return data;
+}
+
+function setClientStatus(message) {
+  if (clientStatus) {
+    clientStatus.textContent = message;
+  }
+}
+
+function collectFields() {
+  const fields = {};
+  dynamicFields.querySelectorAll("[data-field-id]").forEach((input) => {
+    fields[input.dataset.fieldId] = input.value.trim();
+  });
+  return fields;
+}
+
+function applyBrand(client) {
+  activeClient = client;
+  document.documentElement.style.setProperty("--accent", client.colors?.primary || "#1f7a8c");
+  document.documentElement.style.setProperty("--accent-2", client.colors?.accent || "#ef8354");
+
+  if (brandPrimary) brandPrimary.textContent = client.colors?.primary || "#1F7A8C";
+  if (brandAccent) brandAccent.textContent = client.colors?.accent || "#EF8354";
+  if (brandFont) brandFont.textContent = `${client.fonts?.primary || "Inter"} / ${client.fonts?.secondary || "Regular"}`;
+
+  setClientStatus(`Brand kit caricato: ${client.name}`);
+}
+
 function fieldValue(id) {
   const input = dynamicFields.querySelector(`[data-field-id="${id}"]`);
   return input ? input.value.trim() : "";
@@ -135,16 +182,25 @@ function syncCanvas() {
   });
 }
 
-function simulateClaudeCopy() {
+async function generateAiCopy() {
   const model = currentModel();
-  const titleField = dynamicFields.querySelector('[data-field-id="title"]');
+  setClientStatus("Generazione AI in corso...");
 
-  if (titleField) {
-    titleField.value = model.titleFallback;
+  const result = await api("/api/ai/generate", {
+    method: "POST",
+    body: JSON.stringify({
+      clientId: activeClient?.id || "studio-social-pack",
+      templateId: typeInput.value,
+      fields: collectFields(),
+      notes: notesInput.value
+    })
+  });
+
+  if (result.text) {
+    notesInput.value = result.text;
   }
 
-  notesInput.value = "Bozza AI: testo piu pulito, CTA visibile e messaggio coerente con il brand.";
-  syncCanvas();
+  setClientStatus(result.configured ? "Testo AI generato." : result.text);
 }
 
 function showStep(step) {
@@ -164,7 +220,27 @@ typeInput.addEventListener("input", () => {
   syncCanvas();
 });
 
-aiButton.addEventListener("click", simulateClaudeCopy);
+aiButton.addEventListener("click", () => {
+  generateAiCopy().catch((error) => setClientStatus(`Errore AI: ${error.message}`));
+});
+
+saveDraftButton.addEventListener("click", async () => {
+  try {
+    const saved = await api("/api/projects", {
+      method: "POST",
+      body: JSON.stringify({
+        clientId: activeClient?.id || "studio-social-pack",
+        templateId: typeInput.value,
+        fields: collectFields(),
+        notes: notesInput.value
+      })
+    });
+
+    setClientStatus(`Bozza salvata: ${saved.id}`);
+  } catch (error) {
+    setClientStatus(`Errore salvataggio: ${error.message}`);
+  }
+});
 
 stepDots.forEach((dot) => {
   dot.addEventListener("click", () => showStep(Number(dot.dataset.stepTarget)));
@@ -181,3 +257,7 @@ prevButtons.forEach((button) => {
 renderFields();
 syncCanvas();
 showStep(1);
+
+api("/api/clients/studio-social-pack")
+  .then(applyBrand)
+  .catch((error) => setClientStatus(`Errore backend: ${error.message}`));
