@@ -17,9 +17,8 @@ const nextButtons = document.querySelectorAll("[data-next-step]");
 const prevButtons = document.querySelectorAll("[data-prev-step]");
 const saveDraftButton = document.querySelector("#saveDraftButton");
 const clientStatus = document.querySelector("#clientStatus");
-const brandPrimary = document.querySelector("#brandPrimary");
-const brandAccent = document.querySelector("#brandAccent");
-const brandFont = document.querySelector("#brandFont");
+const brandLogoStatus = document.querySelector("#brandLogoStatus");
+const brandStyleStatus = document.querySelector("#brandStyleStatus");
 
 let currentStep = 1;
 let activeClient = null;
@@ -135,9 +134,8 @@ function applyBrand(client) {
   document.documentElement.style.setProperty("--accent", client.colors?.primary || "#1f7a8c");
   document.documentElement.style.setProperty("--accent-2", client.colors?.accent || "#ef8354");
 
-  if (brandPrimary) brandPrimary.textContent = client.colors?.primary || "#1F7A8C";
-  if (brandAccent) brandAccent.textContent = client.colors?.accent || "#EF8354";
-  if (brandFont) brandFont.textContent = `${client.fonts?.primary || "Inter"} / ${client.fonts?.secondary || "Regular"}`;
+  if (brandLogoStatus) brandLogoStatus.textContent = `${client.logo || "Logo"} applicato`;
+  if (brandStyleStatus) brandStyleStatus.textContent = client.visualStyle || "Stile approvato";
   if (canvasLogo) {
     canvasLogo.textContent = client.name.split(" ").map((word) => word[0]).join("").slice(0, 3);
   }
