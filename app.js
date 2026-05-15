@@ -2,8 +2,11 @@ const typeInput = document.querySelector("#type");
 const notesInput = document.querySelector("#notes");
 const regenerateTextButton = document.querySelector("#regenerateTextButton");
 const regenerateStyleButton = document.querySelector("#regenerateStyleButton");
+const generateDesignButton = document.querySelector("#generateDesignButton");
 const dynamicFields = document.querySelector("#dynamicFields");
 const modelSummary = document.querySelector("#modelSummary");
+const templateButtons = document.querySelectorAll("[data-template]");
+const styleButtons = document.querySelectorAll("[data-style]");
 
 const canvas = document.querySelector("#canvas");
 const canvasType = document.querySelector("#canvasType");
@@ -17,8 +20,7 @@ const nextButtons = document.querySelectorAll("[data-next-step]");
 const prevButtons = document.querySelectorAll("[data-prev-step]");
 const saveDraftButton = document.querySelector("#saveDraftButton");
 const clientStatus = document.querySelector("#clientStatus");
-const brandLogoStatus = document.querySelector("#brandLogoStatus");
-const brandStyleStatus = document.querySelector("#brandStyleStatus");
+const clientGreeting = document.querySelector("#clientGreeting");
 
 let currentStep = 1;
 let activeClient = null;
@@ -134,8 +136,7 @@ function applyBrand(client) {
   document.documentElement.style.setProperty("--accent", client.colors?.primary || "#1f7a8c");
   document.documentElement.style.setProperty("--accent-2", client.colors?.accent || "#ef8354");
 
-  if (brandLogoStatus) brandLogoStatus.textContent = `${client.logo || "Logo"} applicato`;
-  if (brandStyleStatus) brandStyleStatus.textContent = client.visualStyle || "Stile approvato";
+  if (clientGreeting) clientGreeting.textContent = client.name;
   if (canvasLogo) {
     canvasLogo.textContent = client.name.split(" ").map((word) => word[0]).join("").slice(0, 3);
   }
@@ -215,6 +216,12 @@ function applyGeneratedText(generation) {
   syncCanvas();
 }
 
+function syncStyleButtons() {
+  styleButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.style === activeStyle);
+  });
+}
+
 async function regenerateTexts() {
   const model = currentModel();
   setClientStatus("Rigenerazione testi in corso...");
@@ -263,6 +270,7 @@ async function regenerateStyle() {
     activeStyle = styleClasses[(currentIndex + 1) % styleClasses.length];
   }
 
+  syncStyleButtons();
   syncCanvas();
   setClientStatus(result.configured ? `Stile applicato: ${activeStyle}` : result.text);
 }
@@ -284,12 +292,39 @@ typeInput.addEventListener("input", () => {
   syncCanvas();
 });
 
+templateButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    typeInput.value = button.dataset.template;
+    renderFields();
+    syncCanvas();
+    showStep(2);
+  });
+});
+
+styleButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    activeStyle = button.dataset.style;
+    styleButtons.forEach((item) => item.classList.toggle("active", item === button));
+    syncCanvas();
+  });
+});
+
 regenerateTextButton.addEventListener("click", () => {
   regenerateTexts().catch((error) => setClientStatus(`Errore testi AI: ${error.message}`));
 });
 
 regenerateStyleButton.addEventListener("click", () => {
   regenerateStyle().catch((error) => setClientStatus(`Errore stile AI: ${error.message}`));
+});
+
+generateDesignButton.addEventListener("click", async () => {
+  try {
+    await regenerateTexts();
+    await regenerateStyle();
+    showStep(4);
+  } catch (error) {
+    setClientStatus(`Errore generazione: ${error.message}`);
+  }
 });
 
 saveDraftButton.addEventListener("click", async () => {

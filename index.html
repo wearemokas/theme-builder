@@ -16,39 +16,35 @@
       </aside>
 
       <main class="main">
-        <header class="topbar">
-          <div>
-            <h1>Studio Social Pack</h1>
-            <p>Template approvati dall'agenzia per post, volantini, eventi e menu.</p>
-          </div>
-          <div class="actions">
-            <button class="btn" id="saveDraftButton" type="button">Salva bozza</button>
-            <button class="btn primary" type="button">Esporta Instagram</button>
-          </div>
-        </header>
-
-        <section class="workspace creator-workspace">
+        <section class="workspace creator-workspace client-flow">
           <div class="panel creator-panel">
             <div class="stepper" aria-label="Creazione grafica">
-              <button class="step-dot active" type="button" data-step-target="1"><span>1</span>Modello</button>
+              <button class="step-dot active" type="button" data-step-target="1"><span>1</span>Crea</button>
               <button class="step-dot" type="button" data-step-target="2"><span>2</span>Campi</button>
-              <button class="step-dot" type="button" data-step-target="3"><span>3</span>AI</button>
-              <button class="step-dot" type="button" data-step-target="4"><span>4</span>Export</button>
+              <button class="step-dot" type="button" data-step-target="3"><span>3</span>Stile</button>
+              <button class="step-dot" type="button" data-step-target="4"><span>4</span>Preview</button>
             </div>
 
             <div class="step-panel active" data-step="1">
-              <div class="field">
-                <label for="type">Tipo grafica</label>
-                <select id="type">
-                  <option value="event">Evento</option>
-                  <option value="menu">Menu</option>
-                  <option value="offer">Promo</option>
-                  <option value="launch">Lancio prodotto</option>
-                  <option value="story">Story Instagram</option>
-                </select>
+              <div class="start-copy">
+                <h1>Theme Builder</h1>
+                <p>Ciao <span id="clientGreeting">Studio Social Pack</span>, cosa vuoi creare oggi?</p>
+              </div>
+              <select class="sr-only" id="type" aria-label="Tipo grafica">
+                <option value="event">Evento</option>
+                <option value="menu">Menu</option>
+                <option value="offer">Promo</option>
+                <option value="launch">Lancio prodotto</option>
+                <option value="story">Story Instagram</option>
+              </select>
+              <div class="template-choice-grid">
+                <button class="template-choice" type="button" data-template="event">Evento</button>
+                <button class="template-choice" type="button" data-template="menu">Menu</button>
+                <button class="template-choice" type="button" data-template="offer">Promo</button>
+                <button class="template-choice" type="button" data-template="launch">Lancio prodotto</button>
+                <button class="template-choice" type="button" data-template="story">Story</button>
               </div>
               <div class="model-summary compact-summary" id="modelSummary"></div>
-              <button class="btn primary" type="button" data-next-step>Continua</button>
             </div>
 
             <div class="step-panel" data-step="2">
@@ -61,70 +57,52 @@
             </div>
 
             <div class="step-panel" data-step="3">
-              <h2>AI e rifinitura</h2>
+              <h2>Scegli stile</h2>
+              <div class="style-choice-grid">
+                <button class="style-choice active" type="button" data-style="premium-night">Premium</button>
+                <button class="style-choice" type="button" data-style="editorial-menu">Editoriale</button>
+                <button class="style-choice" type="button" data-style="bold-promo">Impatto</button>
+                <button class="style-choice" type="button" data-style="warm-launch">Caldo</button>
+                <button class="style-choice" type="button" data-style="clean-story">Pulito</button>
+              </div>
               <div class="field">
                 <label for="notes">Note per Claude AI</label>
                 <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
               </div>
-              <div class="ai-action-grid">
-                <button class="btn warm" id="regenerateTextButton" type="button">Rigenera testi</button>
-                <button class="btn primary" id="regenerateStyleButton" type="button">Rigenera stile</button>
-              </div>
               <div class="step-actions">
                 <button class="btn" type="button" data-prev-step>Indietro</button>
-                <button class="btn primary" type="button" data-next-step>Vai a export</button>
+                <button class="btn primary" id="generateDesignButton" type="button">Genera</button>
               </div>
             </div>
 
             <div class="step-panel" data-step="4">
-              <h2>Esporta</h2>
-              <div class="export-options">
-                <label><input type="radio" name="format" checked> Post Instagram 4:5</label>
-                <label><input type="radio" name="format"> Story 9:16</label>
-                <label><input type="radio" name="format"> PDF per stampa</label>
+              <div class="canvas-wrap">
+                <article class="canvas event" id="canvas">
+                  <div class="canvas-content">
+                    <div>
+                      <div class="canvas-logo" id="canvasLogo">SSP</div>
+                      <div class="canvas-kicker" id="canvasType">Evento speciale</div>
+                      <div class="canvas-title" id="canvasTitle">Aperitivo Live</div>
+                    </div>
+                    <div class="canvas-detail">
+                      <div id="canvasDetails"></div>
+                      <span class="canvas-badge" id="canvasBadge">Prenota ora</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="ai-action-grid">
+                <button class="btn warm" id="regenerateTextButton" type="button">Rigenera testi</button>
+                <button class="btn primary" id="regenerateStyleButton" type="button">Rigenera grafica</button>
               </div>
               <div class="step-actions">
                 <button class="btn" type="button" data-prev-step>Indietro</button>
-                <button class="btn primary" type="button">Esporta grafica</button>
+                <button class="btn" id="saveDraftButton" type="button">Salva bozza</button>
+                <button class="btn primary" type="button">Esporta</button>
               </div>
             </div>
           </div>
-
-          <div class="canvas-wrap">
-            <article class="canvas event" id="canvas">
-              <div class="canvas-content">
-                <div>
-                  <div class="canvas-logo" id="canvasLogo">SSP</div>
-                  <div class="canvas-kicker" id="canvasType">Evento speciale</div>
-                  <div class="canvas-title" id="canvasTitle">Aperitivo Live</div>
-                </div>
-                <div class="canvas-detail">
-                  <div id="canvasDetails"></div>
-                  <span class="canvas-badge" id="canvasBadge">Prenota ora</span>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div class="panel">
-            <h2>Brand bloccato</h2>
-            <div class="asset-row">
-              <span class="asset-dot"></span>
-              <div><strong>Logo</strong><span id="brandLogoStatus">Applicato dall'agenzia</span></div>
-            </div>
-            <div class="asset-row">
-              <span class="asset-dot" style="background:#ef8354"></span>
-              <div><strong>Stile</strong><span id="brandStyleStatus">Palette e font approvati</span></div>
-            </div>
-            <div class="asset-row">
-              <span class="asset-dot" style="background:#182231"></span>
-              <div><strong>Controllo agenzia</strong><span>Colori, font e layout non modificabili</span></div>
-            </div>
-            <div class="ai-box">
-              Claude genera testi e varianti stile restando dentro i vincoli del brand impostati dall'agenzia.
-            </div>
-            <div class="model-summary" id="clientStatus">Backend collegato.</div>
-          </div>
+          <div class="model-summary floating-status" id="clientStatus">Backend collegato.</div>
         </section>
       </main>
     </div>
