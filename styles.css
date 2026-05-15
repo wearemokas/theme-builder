@@ -706,24 +706,25 @@ textarea {
 
   .sidebar {
     min-height: auto;
-    padding: 14px;
-    gap: 12px;
+    padding: 8px 12px;
+    gap: 0;
     position: sticky;
     top: 0;
     z-index: 20;
   }
 
   .brand-mark {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .brand-mark span:first-child {
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
   }
 
   .nav {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: none;
   }
 
   .nav a {
@@ -740,29 +741,26 @@ textarea {
   }
 
   .main {
-    padding: 14px;
+    padding: 10px 12px 14px;
   }
 
   .topbar {
     align-items: flex-start;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 10px;
   }
 
   .topbar h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .topbar p {
-    font-size: 14px;
-    line-height: 1.4;
+    display: none;
   }
 
   .actions {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: none;
   }
 
   .btn {
