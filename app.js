@@ -7,8 +7,12 @@ const dynamicFields = document.querySelector("#dynamicFields");
 const modelSummary = document.querySelector("#modelSummary");
 const templateButtons = document.querySelectorAll("[data-template]");
 const styleButtons = document.querySelectorAll("[data-style]");
+const clientPhotoInput = document.querySelector("#clientPhoto");
+const clientPhotoStatus = document.querySelector("#clientPhotoStatus");
 
 const canvas = document.querySelector("#canvas");
+const canvasBg = document.querySelector("#canvasBg");
+const canvasAiElements = document.querySelector("#canvasAiElements");
 const canvasType = document.querySelector("#canvasType");
 const canvasTitle = document.querySelector("#canvasTitle");
 const canvasDetails = document.querySelector("#canvasDetails");
@@ -25,6 +29,9 @@ const clientGreeting = document.querySelector("#clientGreeting");
 let currentStep = 1;
 let activeClient = null;
 let activeStyle = "premium-night";
+let userUploadedAsset = null;
+let activeBackgroundAsset = null;
+let activeAiElements = [];
 
 const styleClasses = ["premium-night", "editorial-menu", "bold-promo", "warm-launch", "clean-story"];
 
@@ -117,6 +124,25 @@ async function api(path, options = {}) {
   return data;
 }
 
+async function uploadAsset(file, source = "client-upload") {
+  const formData = new FormData();
+  formData.append("photo", file);
+  formData.append("source", source);
+
+  const response = await fetch(`/api/clients/${activeClient?.id || "studio-social-pack"}/assets`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || `Upload ${response.status}`);
+  }
+
+  return data;
+}
+
 function setClientStatus(message) {
   if (clientStatus) {
     clientStatus.textContent = message;
@@ -142,6 +168,10 @@ function applyBrand(client) {
   }
 
   setClientStatus(`Brand kit caricato: ${client.name}`);
+}
+
+function allAssets() {
+  return [userUploadedAsset, ...(activeClient?.photoLibrary || [])].filter(Boolean);
 }
 
 function fieldValue(id) {
@@ -177,7 +207,22 @@ function syncCanvas() {
     .map((field) => fieldValue(field.id))
     .filter(Boolean);
 
-  canvas.className = `canvas ${typeInput.value} style-${activeStyle}`;
+  const fieldText = Object.values(collectFields()).join(" ").toLowerCase();
+  const hasDjSignal = fieldText.includes("dj") || activeAiElements.join(" ").toLowerCase().includes("dj");
+  const photoClass = activeBackgroundAsset?.url ? " has-photo" : "";
+  const djClass = hasDjSignal ? " has-ai-dj" : "";
+
+  canvas.className = `canvas ${typeInput.value} style-${activeStyle}${photoClass}${djClass}`;
+  if (canvasBg) {
+    if (activeBackgroundAsset?.url) {
+      canvasBg.style.setProperty("--canvas-photo", `url("${activeBackgroundAsset.url}")`);
+    } else {
+      canvasBg.style.removeProperty("--canvas-photo");
+    }
+  }
+  if (canvasAiElements) {
+    canvasAiElements.title = activeAiElements.join(", ");
+  }
   canvasType.textContent = model.label;
   canvasTitle.textContent = title;
   canvasBadge.textContent = cta;
@@ -259,7 +304,8 @@ async function regenerateStyle() {
       templateId: typeInput.value,
       fields: collectFields(),
       notes: notesInput.value,
-      currentStyle: activeStyle
+      currentStyle: activeStyle,
+      userAsset: userUploadedAsset
     })
   });
 
@@ -269,6 +315,11 @@ async function regenerateStyle() {
     const currentIndex = styleClasses.indexOf(activeStyle);
     activeStyle = styleClasses[(currentIndex + 1) % styleClasses.length];
   }
+
+  const selectedAssetId = result.generation?.selectedAssetId;
+  const selectedAsset = allAssets().find((asset) => asset.id === selectedAssetId);
+  activeBackgroundAsset = selectedAsset || userUploadedAsset || activeBackgroundAsset;
+  activeAiElements = result.generation?.aiElements || [];
 
   syncStyleButtons();
   syncCanvas();
@@ -291,6 +342,29 @@ typeInput.addEventListener("input", () => {
   renderFields();
   syncCanvas();
 });
+
+if (clientPhotoInput) {
+  clientPhotoInput.addEventListener("change", async () => {
+    const file = clientPhotoInput.files?.[0];
+    if (!file) return;
+
+    try {
+      if (clientPhotoStatus) clientPhotoStatus.textContent = "Caricamento e analisi Claude...";
+      userUploadedAsset = await uploadAsset(file, "client-upload");
+      activeBackgroundAsset = userUploadedAsset;
+      activeAiElements = userUploadedAsset.tags || [];
+      if (clientPhotoStatus) {
+        clientPhotoStatus.textContent = userUploadedAsset.usable
+          ? `Foto pronta: ${userUploadedAsset.description}`
+          : `Foto caricata, ma Claude la segnala come poco adatta: ${userUploadedAsset.reason || userUploadedAsset.description}`;
+      }
+      syncCanvas();
+    } catch (error) {
+      if (clientPhotoStatus) clientPhotoStatus.textContent = `Errore upload: ${error.message}`;
+      setClientStatus(`Errore upload foto: ${error.message}`);
+    }
+  });
+}
 
 templateButtons.forEach((button) => {
   button.addEventListener("click", () => {

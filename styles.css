@@ -562,6 +562,50 @@ textarea {
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.22);
 }
 
+.canvas-bg,
+.canvas-ai-elements {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas-bg {
+  background-image: var(--canvas-photo);
+  background-position: center;
+  background-size: cover;
+  opacity: 0.74;
+  transform: scale(1.02);
+}
+
+.canvas-bg:not([style*="url"]) {
+  opacity: 0;
+}
+
+.canvas-ai-elements {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.42), transparent 19%),
+    linear-gradient(125deg, transparent 0 45%, rgba(255, 255, 255, 0.18) 45% 47%, transparent 47% 100%),
+    linear-gradient(180deg, rgba(10, 16, 27, 0.06), rgba(10, 16, 27, 0.68));
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.canvas.has-photo::after {
+  background: linear-gradient(180deg, rgba(8, 13, 24, 0.16), rgba(8, 13, 24, 0.78));
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.canvas.has-ai-dj .canvas-ai-elements {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(239, 131, 84, 0.9), transparent 18%),
+    radial-gradient(circle at 72% 18%, rgba(31, 122, 140, 0.95), transparent 20%),
+    repeating-linear-gradient(112deg, transparent 0 18px, rgba(255, 255, 255, 0.18) 18px 20px),
+    linear-gradient(180deg, rgba(8, 13, 24, 0.04), rgba(8, 13, 24, 0.76));
+  opacity: 0.82;
+}
+
 .canvas-logo {
   align-items: center;
   background: rgba(255, 255, 255, 0.92);
@@ -650,6 +694,7 @@ textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 2;
 }
 
 .canvas-kicker {
@@ -745,6 +790,51 @@ textarea {
 .asset-row span {
   color: var(--muted);
   font-size: 13px;
+}
+
+.photo-upload-field small {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.photo-library {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.photo-library-item {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 58px minmax(0, 1fr);
+  padding: 8px;
+}
+
+.photo-library-item img {
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  object-fit: cover;
+  width: 58px;
+}
+
+.photo-library-item strong,
+.photo-library-item span {
+  display: block;
+}
+
+.photo-library-item strong {
+  font-size: 13px;
+}
+
+.photo-library-item span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 @media (max-width: 1080px) {

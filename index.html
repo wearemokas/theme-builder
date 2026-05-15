@@ -50,6 +50,11 @@
             <div class="step-panel" data-step="2">
               <h2>Compila campi</h2>
               <div id="dynamicFields"></div>
+              <div class="field photo-upload-field">
+                <label for="clientPhoto">Foto per lo sfondo <span class="optional-tag">Opzionale</span></label>
+                <input id="clientPhoto" type="file" accept="image/png,image/jpeg,image/webp">
+                <small id="clientPhotoStatus">Se carichi una foto, Claude la valuta e la usa solo se adatta.</small>
+              </div>
               <div class="step-actions">
                 <button class="btn" type="button" data-prev-step>Indietro</button>
                 <button class="btn primary" type="button" data-next-step>Anteprima</button>
@@ -78,6 +83,8 @@
             <div class="step-panel" data-step="4">
               <div class="canvas-wrap">
                 <article class="canvas event" id="canvas">
+                  <div class="canvas-bg" id="canvasBg"></div>
+                  <div class="canvas-ai-elements" id="canvasAiElements"></div>
                   <div class="canvas-content">
                     <div>
                       <div class="canvas-logo" id="canvasLogo">SSP</div>

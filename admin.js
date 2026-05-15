@@ -1,6 +1,9 @@
 const clientSelect = document.querySelector("#client");
 const saveButtons = document.querySelectorAll("[data-save-client]");
 const adminStatus = document.querySelector("#adminStatus");
+const brandPhotoUpload = document.querySelector("#brandPhotoUpload");
+const uploadBrandPhotoButton = document.querySelector("#uploadBrandPhoto");
+const photoLibrary = document.querySelector("#photoLibrary");
 
 let activeClient = null;
 
@@ -21,6 +24,25 @@ async function api(path, options = {}) {
   }
 
   return response.json();
+}
+
+async function uploadAsset(file) {
+  const formData = new FormData();
+  formData.append("photo", file);
+  formData.append("source", "brand-library");
+
+  const response = await fetch(`/api/clients/${activeClient.id}/assets`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || `Upload ${response.status}`);
+  }
+
+  return data;
 }
 
 function value(id) {
@@ -58,6 +80,7 @@ function collectClient() {
     keywords: value("keywords"),
     bannedWords: value("bannedWords"),
     imageRules: value("imageRules"),
+    photoLibrary: activeClient?.photoLibrary || [],
     aiRules: value("rules"),
     captionRules: value("captionRules"),
     enabledTemplates: [...document.querySelectorAll("[data-template-enabled]:checked")].map((input) => input.value),
@@ -65,6 +88,26 @@ function collectClient() {
     lockedElements: value("lockedElements"),
     exportFormats: value("exportFormats")
   };
+}
+
+function renderPhotoLibrary(assets = []) {
+  if (!photoLibrary) return;
+
+  if (!assets.length) {
+    photoLibrary.innerHTML = '<div class="model-summary">Nessuna foto caricata. Aggiungi immagini reali del cliente per farle scegliere da Claude.</div>';
+    return;
+  }
+
+  photoLibrary.innerHTML = assets.map((asset) => `
+    <div class="photo-library-item">
+      <img src="${asset.url}" alt="">
+      <div>
+        <strong>${asset.name}</strong>
+        <span>${asset.description || "Foto disponibile per gli sfondi."}</span>
+        <span>${(asset.tags || []).slice(0, 5).join(", ")}</span>
+      </div>
+    </div>
+  `).join("");
 }
 
 function renderClient(client) {
@@ -99,6 +142,7 @@ function renderClient(client) {
 
   document.querySelector(".brand-preview strong").textContent = client.name;
   document.querySelector(".brand-logo-preview").textContent = client.name.split(" ").map((word) => word[0]).join("").slice(0, 3);
+  renderPhotoLibrary(client.photoLibrary || []);
   setStatus("Brand kit caricato.");
 }
 
@@ -129,4 +173,27 @@ async function saveClient() {
 
 clientSelect.addEventListener("change", () => loadClient(clientSelect.value));
 saveButtons.forEach((button) => button.addEventListener("click", saveClient));
+
+if (uploadBrandPhotoButton) {
+  uploadBrandPhotoButton.addEventListener("click", async () => {
+    const file = brandPhotoUpload?.files?.[0];
+
+    if (!file || !activeClient) {
+      setStatus("Seleziona una foto prima di caricare.");
+      return;
+    }
+
+    try {
+      setStatus("Caricamento foto e analisi Claude...");
+      const asset = await uploadAsset(file);
+      activeClient.photoLibrary = [asset, ...(activeClient.photoLibrary || [])];
+      renderPhotoLibrary(activeClient.photoLibrary);
+      brandPhotoUpload.value = "";
+      setStatus("Foto aggiunta alla libreria cliente.");
+    } catch (error) {
+      setStatus(`Errore upload foto: ${error.message}`);
+    }
+  });
+}
+
 loadClients().catch((error) => setStatus(`Errore backend: ${error.message}`));
