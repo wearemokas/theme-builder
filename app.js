@@ -1,6 +1,7 @@
 const typeInput = document.querySelector("#type");
 const notesInput = document.querySelector("#notes");
-const aiButton = document.querySelector("#aiButton");
+const regenerateTextButton = document.querySelector("#regenerateTextButton");
+const regenerateStyleButton = document.querySelector("#regenerateStyleButton");
 const dynamicFields = document.querySelector("#dynamicFields");
 const modelSummary = document.querySelector("#modelSummary");
 
@@ -9,6 +10,7 @@ const canvasType = document.querySelector("#canvasType");
 const canvasTitle = document.querySelector("#canvasTitle");
 const canvasDetails = document.querySelector("#canvasDetails");
 const canvasBadge = document.querySelector("#canvasBadge");
+const canvasLogo = document.querySelector("#canvasLogo");
 const stepPanels = document.querySelectorAll(".step-panel");
 const stepDots = document.querySelectorAll("[data-step-target]");
 const nextButtons = document.querySelectorAll("[data-next-step]");
@@ -21,6 +23,9 @@ const brandFont = document.querySelector("#brandFont");
 
 let currentStep = 1;
 let activeClient = null;
+let activeStyle = "premium-night";
+
+const styleClasses = ["premium-night", "editorial-menu", "bold-promo", "warm-launch", "clean-story"];
 
 const models = {
   event: {
@@ -133,6 +138,9 @@ function applyBrand(client) {
   if (brandPrimary) brandPrimary.textContent = client.colors?.primary || "#1F7A8C";
   if (brandAccent) brandAccent.textContent = client.colors?.accent || "#EF8354";
   if (brandFont) brandFont.textContent = `${client.fonts?.primary || "Inter"} / ${client.fonts?.secondary || "Regular"}`;
+  if (canvasLogo) {
+    canvasLogo.textContent = client.name.split(" ").map((word) => word[0]).join("").slice(0, 3);
+  }
 
   setClientStatus(`Brand kit caricato: ${client.name}`);
 }
@@ -170,7 +178,7 @@ function syncCanvas() {
     .map((field) => fieldValue(field.id))
     .filter(Boolean);
 
-  canvas.className = `canvas ${typeInput.value}`;
+  canvas.className = `canvas ${typeInput.value} style-${activeStyle}`;
   canvasType.textContent = model.label;
   canvasTitle.textContent = title;
   canvasBadge.textContent = cta;
@@ -182,13 +190,41 @@ function syncCanvas() {
   });
 }
 
-async function generateAiCopy() {
+function setFieldValue(id, value) {
+  const input = dynamicFields.querySelector(`[data-field-id="${id}"]`);
+  if (input && value) {
+    input.value = value;
+  }
+}
+
+function applyGeneratedText(generation) {
+  if (generation.title) {
+    setFieldValue("title", generation.title);
+  }
+
+  if (generation.cta) {
+    setFieldValue("cta", generation.cta);
+  }
+
+  const detailFieldIds = currentModel().fields
+    .filter((field) => field.preview === "detail")
+    .map((field) => field.id);
+
+  (generation.details || []).forEach((detail, index) => {
+    setFieldValue(detailFieldIds[index], detail);
+  });
+
+  syncCanvas();
+}
+
+async function regenerateTexts() {
   const model = currentModel();
-  setClientStatus("Generazione AI in corso...");
+  setClientStatus("Rigenerazione testi in corso...");
 
   const result = await api("/api/ai/generate", {
     method: "POST",
     body: JSON.stringify({
+      mode: "text",
       clientId: activeClient?.id || "studio-social-pack",
       templateId: typeInput.value,
       fields: collectFields(),
@@ -196,11 +232,41 @@ async function generateAiCopy() {
     })
   });
 
+  if (result.generation) {
+    applyGeneratedText(result.generation);
+  }
+
   if (result.text) {
     notesInput.value = result.text;
   }
 
-  setClientStatus(result.configured ? "Testo AI generato." : result.text);
+  setClientStatus(result.configured ? "Testi rigenerati." : result.text);
+}
+
+async function regenerateStyle() {
+  setClientStatus("Rigenerazione stile in corso...");
+
+  const result = await api("/api/ai/generate", {
+    method: "POST",
+    body: JSON.stringify({
+      mode: "style",
+      clientId: activeClient?.id || "studio-social-pack",
+      templateId: typeInput.value,
+      fields: collectFields(),
+      notes: notesInput.value,
+      currentStyle: activeStyle
+    })
+  });
+
+  if (result.generation?.styleToken && styleClasses.includes(result.generation.styleToken)) {
+    activeStyle = result.generation.styleToken;
+  } else {
+    const currentIndex = styleClasses.indexOf(activeStyle);
+    activeStyle = styleClasses[(currentIndex + 1) % styleClasses.length];
+  }
+
+  syncCanvas();
+  setClientStatus(result.configured ? `Stile applicato: ${activeStyle}` : result.text);
 }
 
 function showStep(step) {
@@ -220,8 +286,12 @@ typeInput.addEventListener("input", () => {
   syncCanvas();
 });
 
-aiButton.addEventListener("click", () => {
-  generateAiCopy().catch((error) => setClientStatus(`Errore AI: ${error.message}`));
+regenerateTextButton.addEventListener("click", () => {
+  regenerateTexts().catch((error) => setClientStatus(`Errore testi AI: ${error.message}`));
+});
+
+regenerateStyleButton.addEventListener("click", () => {
+  regenerateStyle().catch((error) => setClientStatus(`Errore stile AI: ${error.message}`));
 });
 
 saveDraftButton.addEventListener("click", async () => {

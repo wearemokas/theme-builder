@@ -144,6 +144,12 @@ textarea {
   color: #14191f;
 }
 
+.ai-action-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
 .grid {
   display: grid;
   gap: 18px;
@@ -491,6 +497,21 @@ textarea {
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.22);
 }
 
+.canvas-logo {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  color: #111827;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 900;
+  justify-content: center;
+  margin-bottom: 18px;
+  min-height: 36px;
+  min-width: 48px;
+  padding: 8px 10px;
+}
+
 .canvas.event {
   background:
     linear-gradient(160deg, rgba(22, 32, 51, 0.08), rgba(22, 32, 51, 0.78)),
@@ -521,6 +542,40 @@ textarea {
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.58)),
     #65748b;
+}
+
+.canvas.style-premium-night {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(239, 131, 84, 0.85), transparent 28%),
+    linear-gradient(150deg, rgba(24, 34, 49, 0.15), rgba(24, 34, 49, 0.9)),
+    #1f7a8c;
+}
+
+.canvas.style-editorial-menu {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 247, 251, 0.82)),
+    repeating-linear-gradient(90deg, rgba(31, 122, 140, 0.08) 0 1px, transparent 1px 34px),
+    #f5f7fb;
+  color: #182231;
+}
+
+.canvas.style-bold-promo {
+  background:
+    linear-gradient(135deg, rgba(239, 131, 84, 0.96) 0 42%, rgba(24, 34, 49, 0.96) 42% 100%),
+    #ef8354;
+}
+
+.canvas.style-warm-launch {
+  background:
+    radial-gradient(circle at 72% 20%, rgba(255, 255, 255, 0.55), transparent 24%),
+    linear-gradient(150deg, #f6c85f, #ef8354 48%, #1f7a8c);
+  color: #14191f;
+}
+
+.canvas.style-clean-story {
+  background:
+    linear-gradient(180deg, rgba(31, 122, 140, 0.82), rgba(24, 34, 49, 0.96)),
+    #182231;
 }
 
 .canvas-content {
@@ -806,6 +861,11 @@ textarea {
   }
 
   .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-action-grid,
+  .step-actions {
     grid-template-columns: 1fr;
   }
 

@@ -71,7 +71,10 @@
                 <label for="notes">Note per Claude AI</label>
                 <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
               </div>
-              <button class="btn warm" id="aiButton" type="button">Genera testo con AI</button>
+              <div class="ai-action-grid">
+                <button class="btn warm" id="regenerateTextButton" type="button">Rigenera testi</button>
+                <button class="btn primary" id="regenerateStyleButton" type="button">Rigenera stile</button>
+              </div>
               <div class="step-actions">
                 <button class="btn" type="button" data-prev-step>Indietro</button>
                 <button class="btn primary" type="button" data-next-step>Vai a export</button>
@@ -96,6 +99,7 @@
             <article class="canvas event" id="canvas">
               <div class="canvas-content">
                 <div>
+                  <div class="canvas-logo" id="canvasLogo">SSP</div>
                   <div class="canvas-kicker" id="canvasType">Evento speciale</div>
                   <div class="canvas-title" id="canvasTitle">Aperitivo Live</div>
                 </div>

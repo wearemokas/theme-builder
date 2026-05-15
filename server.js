@@ -129,6 +129,23 @@ function templateDefinitions() {
   ];
 }
 
+function parseJsonObject(text) {
+  if (!text) {
+    return null;
+  }
+
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(match[0]);
+  } catch (error) {
+    return null;
+  }
+}
+
 async function generateWithClaude(payload, client) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -139,7 +156,7 @@ async function generateWithClaude(payload, client) {
     };
   }
 
-  const prompt = [
+  const textPrompt = [
     `Cliente: ${client.name}`,
     `Tone of voice: ${client.tone}`,
     `Parole chiave: ${client.keywords}`,
@@ -148,8 +165,27 @@ async function generateWithClaude(payload, client) {
     `Template: ${payload.templateId}`,
     `Campi compilati: ${JSON.stringify(payload.fields)}`,
     `Note utente: ${payload.notes || ""}`,
-    "Genera una proposta breve per titolo, dettagli e CTA. Rispondi in italiano."
+    "Rigenera solo i testi mantenendo lo stesso tipo di grafica.",
+    "Rispondi solo con JSON valido nel formato:",
+    "{\"title\":\"...\",\"details\":[\"...\",\"...\"],\"cta\":\"...\"}"
   ].join("\n");
+
+  const stylePrompt = [
+    `Cliente: ${client.name}`,
+    `Palette brand: ${JSON.stringify(client.colors)}`,
+    `Font: ${JSON.stringify(client.fonts)}`,
+    `Stile visuale approvato: ${client.visualStyle}`,
+    `Regole immagini: ${client.imageRules}`,
+    `Template: ${payload.templateId}`,
+    `Campi compilati: ${JSON.stringify(payload.fields)}`,
+    `Stile corrente: ${payload.currentStyle || "premium-night"}`,
+    "Scegli uno stile grafico diverso e coerente con il brand.",
+    "styleToken deve essere uno tra: premium-night, editorial-menu, bold-promo, warm-launch, clean-story.",
+    "Rispondi solo con JSON valido nel formato:",
+    "{\"styleToken\":\"premium-night\",\"backgroundPrompt\":\"...\",\"logoPlacement\":\"top-left\",\"designNotes\":\"...\"}"
+  ].join("\n");
+
+  const prompt = payload.mode === "style" ? stylePrompt : textPrompt;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -174,9 +210,12 @@ async function generateWithClaude(payload, client) {
     };
   }
 
+  const text = data.content?.map((item) => item.text).filter(Boolean).join("\n") || "";
+
   return {
     configured: true,
-    text: data.content?.map((item) => item.text).filter(Boolean).join("\n") || ""
+    text,
+    generation: parseJsonObject(text)
   };
 }
 
