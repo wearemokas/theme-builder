@@ -19,10 +19,12 @@ const generatedBgButtons = document.querySelectorAll("[data-bg-mood]");
 const clearPhotoButton = document.querySelector("#clearPhotoButton");
 const realImageButton = document.querySelector("#realImageButton");
 const realImageStatus = document.querySelector("#realImageStatus");
+const generationLoader = document.querySelector("#generationLoader");
 
 const canvas = document.querySelector("#canvas");
 const canvasBg = document.querySelector("#canvasBg");
 const canvasAiElements = document.querySelector("#canvasAiElements");
+const canvasLoader = document.querySelector("#canvasLoader");
 const canvasType = document.querySelector("#canvasType");
 const canvasTitle = document.querySelector("#canvasTitle");
 const canvasDetails = document.querySelector("#canvasDetails");
@@ -46,6 +48,7 @@ let activeFormat = "instagram-post";
 let activeCreativeMood = "";
 let activeBackgroundPrompt = "";
 let manualCreativeMood = "auto";
+let busy = false;
 
 const styleClasses = ["premium-night", "editorial-menu", "bold-promo", "warm-launch", "clean-story"];
 const exportFormats = {
@@ -169,6 +172,37 @@ function setClientStatus(message) {
   if (clientStatus) {
     clientStatus.textContent = message;
   }
+}
+
+function setBusy(isBusy, message = "Generazione in corso...") {
+  busy = isBusy;
+  const busyButtons = [
+    generateDesignButton,
+    regenerateTextButton,
+    regenerateStyleButton,
+    realImageButton,
+    saveDraftButton,
+    ...formatButtons,
+    ...generatedBgButtons
+  ].filter(Boolean);
+
+  busyButtons.forEach((button) => {
+    button.disabled = isBusy;
+  });
+
+  if (generationLoader) {
+    generationLoader.classList.toggle("active", isBusy);
+    const label = generationLoader.querySelector("strong");
+    if (label) label.textContent = message;
+  }
+}
+
+function setCanvasLoading(isLoading, message = "Genero sfondo AI") {
+  if (!canvasLoader) return;
+
+  canvasLoader.classList.toggle("active", isLoading);
+  const label = canvasLoader.querySelector("strong");
+  if (label) label.textContent = message;
 }
 
 function collectFields() {
@@ -386,6 +420,9 @@ function syncGeneratedBgButtons() {
 }
 
 async function generateRealImageBackground() {
+  if (busy) return;
+  setBusy(true, "Genero immagine AI reale...");
+  setCanvasLoading(true, "Genero sfondo AI");
   const fields = collectFields();
   const visualMood = manualCreativeMood === "auto"
     ? detectCreativeMood(Object.values(fields).join(" "))
@@ -395,34 +432,39 @@ async function generateRealImageBackground() {
     realImageStatus.textContent = "Generazione immagine reale in corso...";
   }
 
-  const result = await api("/api/ai/image", {
-    method: "POST",
-    body: JSON.stringify({
-      clientId: activeClient?.id || "studio-social-pack",
-      templateId: typeInput.value,
-      format: currentFormat(),
-      fields,
-      visualMood,
-      backgroundPrompt: activeBackgroundPrompt || `${visualMood} premium flyer background, elegant, realistic, professional`
-    })
-  });
+  try {
+    const result = await api("/api/ai/image", {
+      method: "POST",
+      body: JSON.stringify({
+        clientId: activeClient?.id || "studio-social-pack",
+        templateId: typeInput.value,
+        format: currentFormat(),
+        fields,
+        visualMood,
+        backgroundPrompt: activeBackgroundPrompt || `${visualMood} premium flyer background, elegant, realistic, professional`
+      })
+    });
 
-  if (result.asset?.url) {
-    activeBackgroundAsset = result.asset;
-    activeCreativeMood = visualMood;
-    activeAiElements = [];
-    activeBackgroundPrompt = result.prompt || activeBackgroundPrompt;
-    if (realImageStatus) {
-      realImageStatus.textContent = `Immagine AI reale generata: ${result.size || ""}`;
+    if (result.asset?.url) {
+      activeBackgroundAsset = result.asset;
+      activeCreativeMood = visualMood;
+      activeAiElements = [];
+      activeBackgroundPrompt = result.prompt || activeBackgroundPrompt;
+      if (realImageStatus) {
+        realImageStatus.textContent = `Immagine AI reale generata: ${result.size || ""}`;
+      }
+      syncCanvas();
+      return;
     }
-    syncCanvas();
-    return;
-  }
 
-  if (realImageStatus) {
-    realImageStatus.textContent = result.error || "Immagine non generata.";
+    if (realImageStatus) {
+      realImageStatus.textContent = result.error || "Immagine non generata.";
+    }
+    setClientStatus(result.error || "Immagine non generata.");
+  } finally {
+    setCanvasLoading(false);
+    setBusy(false);
   }
-  setClientStatus(result.error || "Immagine non generata.");
 }
 
 function setFieldValue(id, value) {
@@ -582,20 +624,28 @@ styleButtons.forEach((button) => {
 });
 
 regenerateTextButton.addEventListener("click", () => {
+  if (busy) return;
   regenerateTexts().catch((error) => setClientStatus(`Errore testi AI: ${error.message}`));
 });
 
 regenerateStyleButton.addEventListener("click", () => {
+  if (busy) return;
   regenerateStyle().catch((error) => setClientStatus(`Errore stile AI: ${error.message}`));
 });
 
 generateDesignButton.addEventListener("click", async () => {
+  if (busy) return;
   try {
+    setBusy(true, "Genero testi e grafica...");
+    setCanvasLoading(true, "Genero grafica");
     await regenerateTexts();
     await regenerateStyle();
     showStep(4);
   } catch (error) {
     setClientStatus(`Errore generazione: ${error.message}`);
+  } finally {
+    setCanvasLoading(false);
+    setBusy(false);
   }
 });
 
@@ -670,9 +720,12 @@ if (clearPhotoButton) {
 
 if (realImageButton) {
   realImageButton.addEventListener("click", () => {
+    if (busy) return;
     generateRealImageBackground().catch((error) => {
       if (realImageStatus) realImageStatus.textContent = `Errore immagine AI: ${error.message}`;
       setClientStatus(`Errore immagine AI: ${error.message}`);
+      setCanvasLoading(false);
+      setBusy(false);
     });
   });
 }

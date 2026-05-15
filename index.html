@@ -74,6 +74,10 @@
                 <label for="notes">Note per Claude AI</label>
                 <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
               </div>
+              <div class="generation-loader" id="generationLoader" aria-live="polite">
+                <span></span>
+                <strong>Generazione in corso...</strong>
+              </div>
               <div class="step-actions">
                 <button class="btn" type="button" data-prev-step>Indietro</button>
                 <button class="btn primary" id="generateDesignButton" type="button">Genera</button>
@@ -141,6 +145,10 @@
                 <article class="canvas event" id="canvas">
                   <div class="canvas-bg" id="canvasBg"></div>
                   <div class="canvas-ai-elements" id="canvasAiElements"></div>
+                  <div class="canvas-loader" id="canvasLoader">
+                    <span></span>
+                    <strong>Genero sfondo AI</strong>
+                  </div>
                   <div class="canvas-content">
                     <div>
                       <div class="canvas-logo" id="canvasLogo">SSP</div>
