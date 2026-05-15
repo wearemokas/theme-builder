@@ -22,7 +22,7 @@
               <button class="step-dot active" type="button" data-step-target="1"><span>1</span>Crea</button>
               <button class="step-dot" type="button" data-step-target="2"><span>2</span>Campi</button>
               <button class="step-dot" type="button" data-step-target="3"><span>3</span>Stile</button>
-              <button class="step-dot" type="button" data-step-target="4"><span>4</span>Preview</button>
+              <button class="step-dot" type="button" data-step-target="4"><span>4</span>Export</button>
             </div>
 
             <div class="step-panel active" data-step="1">
@@ -81,6 +81,46 @@
             </div>
 
             <div class="step-panel" data-step="4">
+              <div class="export-format-panel">
+                <h2>Formato grafica</h2>
+                <div class="format-choice-grid">
+                  <button class="format-choice active" type="button" data-format="instagram-post">
+                    <strong>Post IG</strong>
+                    <span>1080 x 1350</span>
+                  </button>
+                  <button class="format-choice" type="button" data-format="instagram-story">
+                    <strong>Stories</strong>
+                    <span>1080 x 1920</span>
+                  </button>
+                  <button class="format-choice" type="button" data-format="square">
+                    <strong>Quadrato</strong>
+                    <span>1080 x 1080</span>
+                  </button>
+                  <button class="format-choice" type="button" data-format="flyer">
+                    <strong>Volantino</strong>
+                    <span>A5 verticale</span>
+                  </button>
+                  <button class="format-choice" type="button" data-format="landscape">
+                    <strong>Orizzontale</strong>
+                    <span>1920 x 1080</span>
+                  </button>
+                  <button class="format-choice" type="button" data-format="custom">
+                    <strong>Custom</strong>
+                    <span>Dimensioni libere</span>
+                  </button>
+                </div>
+                <div class="custom-format-fields" id="customFormatFields">
+                  <label>
+                    Larghezza
+                    <input id="customWidth" type="number" min="300" max="4000" value="1080">
+                  </label>
+                  <label>
+                    Altezza
+                    <input id="customHeight" type="number" min="300" max="5000" value="1350">
+                  </label>
+                </div>
+                <div class="format-current" id="formatCurrent">Post IG - 1080 x 1350 px</div>
+              </div>
               <div class="canvas-wrap">
                 <article class="canvas event" id="canvas">
                   <div class="canvas-bg" id="canvasBg"></div>
@@ -105,7 +145,7 @@
               <div class="step-actions">
                 <button class="btn" type="button" data-prev-step>Indietro</button>
                 <button class="btn" id="saveDraftButton" type="button">Salva bozza</button>
-                <button class="btn primary" type="button">Esporta</button>
+                <button class="btn primary" id="exportButton" type="button">Esporta</button>
               </div>
             </div>
           </div>

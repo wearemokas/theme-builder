@@ -544,6 +544,88 @@ textarea {
   width: 1px;
 }
 
+.export-format-panel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.export-format-panel h2 {
+  margin-bottom: 0;
+}
+
+.format-choice-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.format-choice {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  gap: 4px;
+  min-height: 76px;
+  padding: 10px;
+  text-align: left;
+}
+
+.format-choice strong,
+.format-choice span {
+  display: block;
+}
+
+.format-choice strong {
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+.format-choice span,
+.format-current {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.format-choice.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.format-choice.active span {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.custom-format-fields {
+  display: none;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.custom-format-fields.active {
+  display: grid;
+}
+
+.custom-format-fields label {
+  color: #334155;
+  display: grid;
+  font-size: 12px;
+  font-weight: 750;
+  gap: 5px;
+}
+
+.custom-format-fields input {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 40px;
+  padding: 8px 10px;
+  width: 100%;
+}
+
 .canvas-wrap {
   display: grid;
   place-items: center;
@@ -560,6 +642,14 @@ textarea {
   overflow: hidden;
   position: relative;
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.22);
+}
+
+.canvas[data-format="instagram-story"] {
+  width: min(100%, 330px);
+}
+
+.canvas[data-format="landscape"] {
+  width: min(100%, 520px);
 }
 
 .canvas-bg,
@@ -1026,6 +1116,21 @@ textarea {
     padding: 8px;
   }
 
+  .export-format-panel {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .format-choice-grid {
+    gap: 7px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .format-choice {
+    min-height: 62px;
+    padding: 8px;
+  }
+
   .canvas {
     width: min(100%, 360px);
     max-height: calc(100svh - 230px);
@@ -1071,9 +1176,17 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .format-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .canvas {
     width: 100%;
     max-height: none;
+  }
+
+  .canvas[data-format="instagram-story"] {
+    width: min(100%, 300px);
   }
 
   .canvas-content {

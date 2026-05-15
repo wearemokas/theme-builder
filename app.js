@@ -9,6 +9,12 @@ const templateButtons = document.querySelectorAll("[data-template]");
 const styleButtons = document.querySelectorAll("[data-style]");
 const clientPhotoInput = document.querySelector("#clientPhoto");
 const clientPhotoStatus = document.querySelector("#clientPhotoStatus");
+const formatButtons = document.querySelectorAll("[data-format]");
+const customFormatFields = document.querySelector("#customFormatFields");
+const customWidthInput = document.querySelector("#customWidth");
+const customHeightInput = document.querySelector("#customHeight");
+const formatCurrent = document.querySelector("#formatCurrent");
+const exportButton = document.querySelector("#exportButton");
 
 const canvas = document.querySelector("#canvas");
 const canvasBg = document.querySelector("#canvasBg");
@@ -32,8 +38,17 @@ let activeStyle = "premium-night";
 let userUploadedAsset = null;
 let activeBackgroundAsset = null;
 let activeAiElements = [];
+let activeFormat = "instagram-post";
 
 const styleClasses = ["premium-night", "editorial-menu", "bold-promo", "warm-launch", "clean-story"];
+const exportFormats = {
+  "instagram-post": { label: "Post IG", width: 1080, height: 1350 },
+  "instagram-story": { label: "Stories Instagram", width: 1080, height: 1920 },
+  square: { label: "Quadrato", width: 1080, height: 1080 },
+  flyer: { label: "Volantino A5", width: 1240, height: 1748 },
+  landscape: { label: "Orizzontale", width: 1920, height: 1080 },
+  custom: { label: "Custom", width: 1080, height: 1350 }
+};
 
 const models = {
   event: {
@@ -174,6 +189,39 @@ function allAssets() {
   return [userUploadedAsset, ...(activeClient?.photoLibrary || [])].filter(Boolean);
 }
 
+function currentFormat() {
+  if (activeFormat !== "custom") {
+    return exportFormats[activeFormat];
+  }
+
+  return {
+    label: "Custom",
+    width: Number(customWidthInput?.value || 1080),
+    height: Number(customHeightInput?.value || 1350)
+  };
+}
+
+function syncFormat() {
+  const format = currentFormat();
+
+  if (canvas) {
+    canvas.style.aspectRatio = `${format.width} / ${format.height}`;
+    canvas.dataset.format = activeFormat;
+  }
+
+  if (formatCurrent) {
+    formatCurrent.textContent = `${format.label} - ${format.width} x ${format.height} px`;
+  }
+
+  if (customFormatFields) {
+    customFormatFields.classList.toggle("active", activeFormat === "custom");
+  }
+
+  formatButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.format === activeFormat);
+  });
+}
+
 function fieldValue(id) {
   const input = dynamicFields.querySelector(`[data-field-id="${id}"]`);
   return input ? input.value.trim() : "";
@@ -223,6 +271,7 @@ function syncCanvas() {
   if (canvasAiElements) {
     canvasAiElements.title = activeAiElements.join(", ");
   }
+  syncFormat();
   canvasType.textContent = model.label;
   canvasTitle.textContent = title;
   canvasBadge.textContent = cta;
@@ -277,6 +326,7 @@ async function regenerateTexts() {
       mode: "text",
       clientId: activeClient?.id || "studio-social-pack",
       templateId: typeInput.value,
+      format: currentFormat(),
       fields: collectFields(),
       notes: notesInput.value
     })
@@ -302,6 +352,7 @@ async function regenerateStyle() {
       mode: "style",
       clientId: activeClient?.id || "studio-social-pack",
       templateId: typeInput.value,
+      format: currentFormat(),
       fields: collectFields(),
       notes: notesInput.value,
       currentStyle: activeStyle,
@@ -369,6 +420,10 @@ if (clientPhotoInput) {
 templateButtons.forEach((button) => {
   button.addEventListener("click", () => {
     typeInput.value = button.dataset.template;
+    if (typeInput.value === "story") {
+      activeFormat = "instagram-story";
+      syncFormat();
+    }
     renderFields();
     syncCanvas();
     showStep(2);
@@ -408,6 +463,7 @@ saveDraftButton.addEventListener("click", async () => {
       body: JSON.stringify({
         clientId: activeClient?.id || "studio-social-pack",
         templateId: typeInput.value,
+        format: currentFormat(),
         fields: collectFields(),
         notes: notesInput.value
       })
@@ -431,8 +487,29 @@ prevButtons.forEach((button) => {
   button.addEventListener("click", () => showStep(currentStep - 1));
 });
 
+formatButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    activeFormat = button.dataset.format;
+    syncFormat();
+  });
+});
+
+[customWidthInput, customHeightInput].forEach((input) => {
+  if (input) {
+    input.addEventListener("input", syncFormat);
+  }
+});
+
+if (exportButton) {
+  exportButton.addEventListener("click", () => {
+    const format = currentFormat();
+    setClientStatus(`Export pronto: ${format.label} ${format.width}x${format.height}px`);
+  });
+}
+
 renderFields();
 syncCanvas();
+syncFormat();
 showStep(1);
 
 api("/api/clients/studio-social-pack")
