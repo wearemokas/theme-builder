@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theme Builder - Cliente</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand-mark"><span>TB</span><span>Theme Builder</span></div>
+        <nav class="nav">
+          <a class="active" href="index.html">Crea grafica</a>
+          <a href="admin.html">Back-end agenzia</a>
+        </nav>
+        <div class="sidebar-note">
+          Area cliente semplificata: il cliente sceglie un modello approvato, inserisce i dati e genera una bozza pronta per Instagram.
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <h1>Studio Social Pack</h1>
+            <p>Template approvati dall'agenzia per post, volantini, eventi e menu.</p>
+          </div>
+          <div class="actions">
+            <button class="btn">Salva bozza</button>
+            <button class="btn primary">Esporta Instagram</button>
+          </div>
+        </header>
+
+        <section class="workspace">
+          <div class="canvas-wrap">
+            <article class="canvas event" id="canvas">
+              <div class="canvas-content">
+                <div>
+                  <div class="canvas-kicker" id="canvasType">Evento speciale</div>
+                  <div class="canvas-title" id="canvasTitle">Aperitivo Live</div>
+                </div>
+                <div class="canvas-detail">
+                  <span id="canvasDate">Venerdi 24 maggio</span>
+                  <span id="canvasPlace">RHD Lounge, Milano</span>
+                  <span class="canvas-badge">Prenota ora</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="panel">
+            <h2>Contenuto</h2>
+            <div class="field">
+              <label for="type">Tipo grafica</label>
+              <select id="type">
+                <option value="event">Evento</option>
+                <option value="menu">Menu</option>
+                <option value="offer">Promo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="title">Titolo</label>
+              <input id="title" value="Aperitivo Live">
+            </div>
+            <div class="field">
+              <label for="date">Data o periodo</label>
+              <input id="date" value="Venerdi 24 maggio">
+            </div>
+            <div class="field">
+              <label for="place">Luogo</label>
+              <input id="place" value="RHD Lounge, Milano">
+            </div>
+            <div class="field">
+              <label for="notes">Note per Claude AI</label>
+              <textarea id="notes">Rendi il testo piu elegante, adatto a un locale premium ma accessibile.</textarea>
+            </div>
+            <button class="btn warm" id="aiButton">Genera testo con Claude AI</button>
+          </div>
+
+          <div class="panel">
+            <h2>Brand applicato</h2>
+            <div class="asset-row">
+              <span class="asset-dot"></span>
+              <div><strong>Colore primario</strong><span>#1F7A8C</span></div>
+            </div>
+            <div class="asset-row">
+              <span class="asset-dot" style="background:#ef8354"></span>
+              <div><strong>Colore accento</strong><span>#EF8354</span></div>
+            </div>
+            <div class="asset-row">
+              <span class="asset-dot" style="background:#182231"></span>
+              <div><strong>Font</strong><span>Inter Bold / Regular</span></div>
+            </div>
+            <div class="ai-box">
+              Integrazione prevista: Claude AI generera copy, varianti creative e suggerimenti layout partendo dai vincoli del brand scelti dall'agenzia.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

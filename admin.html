@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theme Builder - Back-end</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand-mark"><span>TB</span><span>Theme Builder</span></div>
+        <nav class="nav">
+          <a href="index.html">Crea grafica</a>
+          <a class="active" href="admin.html">Back-end agenzia</a>
+        </nav>
+        <div class="sidebar-note">
+          Area agenzia: qui configuri clienti, palette, font, template disponibili e regole di generazione AI.
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <h1>Back-end agenzia</h1>
+            <p>Gestione brand kit, modelli e permessi per i clienti.</p>
+          </div>
+          <div class="actions">
+            <button class="btn">Anteprima cliente</button>
+            <button class="btn primary">Pubblica modifiche</button>
+          </div>
+        </header>
+
+        <section class="stats">
+          <div class="stat"><strong>12</strong><span>Clienti attivi</span></div>
+          <div class="stat"><strong>38</strong><span>Template approvati</span></div>
+          <div class="stat"><strong>214</strong><span>Grafiche create</span></div>
+        </section>
+
+        <section class="grid dashboard-grid">
+          <div class="panel">
+            <h2>Brand kit cliente</h2>
+            <div class="field">
+              <label for="client">Cliente</label>
+              <select id="client">
+                <option>Studio Social Pack</option>
+                <option>Ristorante Milano Centro</option>
+                <option>Beauty Lab</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="logo">Logo</label>
+              <input id="logo" value="studio-social-pack-logo.png">
+            </div>
+            <div class="field">
+              <label>Palette</label>
+              <div class="swatches">
+                <span class="swatch" style="background:#1f7a8c"></span>
+                <span class="swatch" style="background:#ef8354"></span>
+                <span class="swatch" style="background:#182231"></span>
+                <span class="swatch" style="background:#f5f7fb"></span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="font">Font principale</label>
+              <input id="font" value="Inter">
+            </div>
+            <div class="field">
+              <label for="rules">Regole AI e tono di voce</label>
+              <textarea id="rules">Tono professionale, diretto e premium. Evitare testi troppo lunghi. Inserire sempre una call to action chiara.</textarea>
+            </div>
+            <button class="btn primary">Salva brand kit</button>
+          </div>
+
+          <div class="panel">
+            <h2>Template controllati</h2>
+            <div class="template-list">
+              <article class="template-card">
+                <div class="template-thumb" style="--thumb-bg:#1f7a8c"><strong>Evento</strong></div>
+                <div class="template-meta">
+                  <h3>Evento Instagram</h3>
+                  <p>Post 4:5 con data, luogo e CTA.</p>
+                </div>
+              </article>
+              <article class="template-card">
+                <div class="template-thumb" style="--thumb-bg:#e7eef5;color:#182231"><strong>Menu</strong></div>
+                <div class="template-meta">
+                  <h3>Menu giornaliero</h3>
+                  <p>Layout ordinato per piatti e prezzi.</p>
+                </div>
+              </article>
+              <article class="template-card">
+                <div class="template-thumb" style="--thumb-bg:#2f8f5b"><strong>Promo</strong></div>
+                <div class="template-meta">
+                  <h3>Offerta flash</h3>
+                  <p>Creativita per sconti e campagne.</p>
+                </div>
+              </article>
+              <article class="template-card">
+                <div class="template-thumb" style="--thumb-bg:#263238"><strong>Story</strong></div>
+                <div class="template-meta">
+                  <h3>Story verticale</h3>
+                  <p>Formato 9:16 per Instagram Stories.</p>
+                </div>
+              </article>
+              <article class="template-card">
+                <div class="template-thumb" style="--thumb-bg:#ef8354;color:#14191f"><strong>New</strong></div>
+                <div class="template-meta">
+                  <h3>Lancio prodotto</h3>
+                  <p>Per novita, servizi e nuovi menu.</p>
+                </div>
+              </article>
+              <article class="template-card">
+                <div class="template-thumb" style="--thumb-bg:#65748b"><strong>Quote</strong></div>
+                <div class="template-meta">
+                  <h3>Post editoriale</h3>
+                  <p>Frasi, recensioni e contenuti brand.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
