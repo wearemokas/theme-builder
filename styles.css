@@ -513,14 +513,17 @@ textarea {
   border-radius: 8px;
   color: var(--ink);
   cursor: pointer;
+  display: grid;
   font-weight: 850;
+  line-height: 1.1;
   min-height: 58px;
   padding: 12px;
-  text-align: left;
+  place-items: center;
+  text-align: center;
 }
 
 .template-choice:first-child {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
 
 .style-choice.active {
@@ -530,8 +533,7 @@ textarea {
 }
 
 .floating-status {
-  max-width: 720px;
-  width: 100%;
+  display: none;
 }
 
 .sr-only {
@@ -768,12 +770,7 @@ textarea {
   }
 
   .sidebar {
-    min-height: auto;
-    padding: 8px 12px;
-    gap: 0;
-    position: sticky;
-    top: 0;
-    z-index: 20;
+    display: none;
   }
 
   .brand-mark {
@@ -804,7 +801,7 @@ textarea {
   }
 
   .main {
-    padding: 10px 12px 14px;
+    padding: 6px 10px 12px;
   }
 
   .topbar {
@@ -833,12 +830,12 @@ textarea {
   }
 
   .workspace {
-    gap: 14px;
+    gap: 8px;
   }
 
   .creator-panel {
     order: 1;
-    gap: 10px;
+    gap: 8px;
   }
 
   .canvas-wrap {
@@ -851,32 +848,40 @@ textarea {
 
   .client-flow {
     display: grid;
-    gap: 10px;
+    gap: 8px;
   }
 
   .stepper {
     position: sticky;
-    top: 44px;
+    top: 0;
     z-index: 10;
-    gap: 4px;
-    padding: 4px;
+    gap: 3px;
+    padding: 3px;
   }
 
   .step-dot {
     flex-direction: column;
-    gap: 2px;
-    min-height: 40px;
-    font-size: 11px;
-    padding: 4px;
+    gap: 1px;
+    min-height: 34px;
+    font-size: 10px;
+    padding: 3px;
   }
 
   .step-dot span {
-    height: 20px;
-    width: 20px;
+    font-size: 10px;
+    height: 17px;
+    width: 17px;
   }
 
   .panel {
     padding: 10px;
+  }
+
+  .client-flow .creator-panel {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
   }
 
   .panel h2,
@@ -905,26 +910,30 @@ textarea {
   }
 
   .start-copy {
-    margin-bottom: 12px;
+    gap: 4px;
+    margin-bottom: 8px;
   }
 
   .start-copy h1 {
-    font-size: 26px;
+    font-size: 22px;
   }
 
   .start-copy p {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .template-choice-grid,
   .style-choice-grid {
-    grid-template-columns: 1fr;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .template-choice,
   .style-choice {
-    min-height: 48px;
-    padding: 10px 12px;
+    aspect-ratio: 1 / 1;
+    font-size: 14px;
+    min-height: 0;
+    padding: 8px;
   }
 
   .canvas {
@@ -960,7 +969,7 @@ textarea {
 
 @media (max-width: 420px) {
   .main {
-    padding: 12px;
+    padding: 6px 8px 10px;
   }
 
   .actions {
